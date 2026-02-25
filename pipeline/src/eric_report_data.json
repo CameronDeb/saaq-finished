@@ -1,0 +1,380 @@
+{
+  "subject": "Eric",
+  "email": "ewagen1@aol.com",
+  "report_date": "February 23, 2026",
+  "version": "15Q",
+  "stage_estimate": {
+    "title": "S4 → S5 (Loyal Belonger edging toward Skilled Specialist)",
+    "evidence_current": {
+      "stage": "S4 (Loyal Belonger)",
+      "items": [
+        "Identity is tightly bound to work role; retirement has triggered a felt loss of purpose and belonging (“don't feel connected or that I am contributing”).",
+        "Operates from rule-based, duty-oriented reasoning: “You have to vote for core beliefs”; “I shouldn't be criticized for not wanting to go.”",
+        "Seeks order and predictability; preference for people who “mind their business” and adopt a “reasonable, fact-based approach.”",
+        "Evaluates conflict through right/wrong framing rather than perspective-taking: “People believe what they want, and hold their position.”"
+      ]
+    },
+    "evidence_emerging": {
+      "stage": "S5 (Skilled Specialist)",
+      "items": [
+        "Practical problem-solving orientation: identifies a concrete issue (insurance premium), researches alternatives, and acts decisively.",
+        "Beginning self-awareness around inner dynamics: recognizes inner voice as directional, acknowledges fighting it at times.",
+        "Articulates the physical-mental tension of medication dependency and frames it as a directional journey: “I tell myself I'm heading in the right direction.”",
+        "Can name specific behavioral patterns (abruptness, opinionatedness) even if not yet consistently modulating them."
+      ]
+    },
+    "fallbacks": [
+      "Anxiety and confusion collapse into anger—a rapid escalation pattern that short-circuits reflective capacity.",
+      "Rigid boundary defense under perceived intrusion: shuts down dialogue rather than exploring the other's perspective.",
+      "Substance reliance as energy regulation when internal resources are depleted."
+    ],
+    "verdict": "Eric's center of gravity sits firmly at S4 with occasional S5 forays in practical problem-solving and nascent self-awareness. The primary developmental lever is building tolerance for ambiguity and perspective-taking, especially in relational contexts where his current binary framing limits connection. Consolidation in S5 will come from translating his practical competence into genuine curiosity about inner experience and others' viewpoints."
+  },
+  "hemispheric_bias": {
+    "title": "Left-Dominant (right-hemisphere access constrained)",
+    "description": "Eric's responses are consistently brief, concrete, and solution-oriented—hallmarks of left-hemisphere processing. He sequences problems linearly (identify issue → research → act), prefers fact-based reasoning, and gravitates toward people who share this mode. Emotional vocabulary is narrow (anxious, confused, angry), and relational language is minimal. The right hemisphere's capacity for contextual, embodied, and relational processing appears largely untapped, particularly evident in his limited spiritual connection, diminished creative expression, and difficulty staying open to differing views. The developmental edge is to cultivate right-hemisphere capacities—somatic awareness, emotional granularity, and relational curiosity—without abandoning the left-hemisphere strengths that serve him well in practical domains."
+  },
+  "power_centers": [
+    {
+      "name": "Vital (Physical/Sexual)",
+      "assessment": "Compromised",
+      "notes": "Energy is significantly mediated by narcotics intake; energy deficit is a 'major negative trigger.' Somatic awareness is limited to noticing energy levels rather than subtler body signals."
+    },
+    {
+      "name": "Emotional",
+      "assessment": "Under-resourced",
+      "notes": "Anxiety → confusion → anger is the dominant cascade. Limited emotional vocabulary and regulation tools. Inner voice is recognized but often fought rather than integrated."
+    },
+    {
+      "name": "Relational",
+      "assessment": "Strained",
+      "notes": "Retirement severed primary relational anchors (workplace community, role-based identity). Difficulty staying open to different views; connection attempts filter through alignment with own positions."
+    },
+    {
+      "name": "Social/Leadership",
+      "assessment": "Context-dependent",
+      "notes": "Willing to express positions and lead in familiar groups; self-describes as 'abrupt, opinionated, headstrong.' Leadership style may alienate rather than attract in some settings."
+    },
+    {
+      "name": "Financial",
+      "assessment": "Stable, Identity-linked",
+      "notes": "Money linked to self-worth and prosperity. Strong stewardship ethic. Risk: self-worth in retirement may erode without earned-income anchor."
+    },
+    {
+      "name": "Creative",
+      "assessment": "Dormant",
+      "notes": "'Much more when I was younger.' Current expression limited to building things. A potential re-activation pathway for meaning-making in retirement."
+    },
+    {
+      "name": "Intellectual",
+      "assessment": "Moderate, Pragmatic",
+      "notes": "Preference for facts and reasoning; not strongly oriented toward curiosity or exploration. Intellectual energy is applied to solving immediate problems rather than broader inquiry."
+    },
+    {
+      "name": "Spiritual",
+      "assessment": "Minimal / Dormant",
+      "notes": "Acknowledges a larger force but reports 'very little connection to it.' Spiritual domain is the least developed center and a significant growth frontier."
+    }
+  ],
+  "power_center_kpis": [
+    {
+      "center": "Vital",
+      "kpi": "Energy log",
+      "baseline": "No tracking; reactive to narcotics cycle",
+      "target": "Daily 1–10 energy rating; identify 2 non-substance energy levers"
+    },
+    {
+      "center": "Emotional",
+      "kpi": "Emotion naming",
+      "baseline": "3-word vocabulary (anxious, confused, angry)",
+      "target": "Name 5+ distinct emotions/week; 3 pause-before-anger reps/week"
+    },
+    {
+      "center": "Relational",
+      "kpi": "Connection touchpoints",
+      "baseline": "Largely isolated post-retirement",
+      "target": "2 meaningful social contacts/week (not transactional)"
+    },
+    {
+      "center": "Social/Leadership",
+      "kpi": "Listening reps",
+      "baseline": "Tends to assert before inquiring",
+      "target": "Ask 2 genuine questions before stating position in 3 conversations/week"
+    },
+    {
+      "center": "Financial",
+      "kpi": "Worth-beyond-work journal",
+      "baseline": "Self-worth tied to earning",
+      "target": "Weekly log of 3 non-financial contributions to others"
+    },
+    {
+      "center": "Creative",
+      "kpi": "Hands-on project time",
+      "baseline": "Minimal creative output",
+      "target": "2 hours/week building, crafting, or creating something tangible"
+    },
+    {
+      "center": "Intellectual",
+      "kpi": "Curiosity stretch",
+      "baseline": "Fact consumption without exploration",
+      "target": "1 article, podcast, or conversation/week outside comfort zone"
+    },
+    {
+      "center": "Spiritual",
+      "kpi": "Stillness practice",
+      "baseline": "No regular practice",
+      "target": "5 minutes/day of quiet sitting or nature presence"
+    }
+  ],
+  "core_aptitudes": [
+    {
+      "aptitude": "Autonomy/Influence",
+      "assessment": "Moderate-High",
+      "evidence": "Comfortable asserting positions in groups; not shy about expressing views. However, influence tends toward force rather than persuasion."
+    },
+    {
+      "aptitude": "Drive",
+      "assessment": "Moderate, Variable",
+      "evidence": "Shows drive in practical problem-solving (insurance savings) but energy variability linked to substance intake limits sustained effort."
+    },
+    {
+      "aptitude": "Perseverance",
+      "assessment": "Moderate",
+      "evidence": "Maintains medication regimen despite desire to stop ('heading in right direction'). However, anger and frustration can derail sustained effort."
+    },
+    {
+      "aptitude": "Achievement",
+      "assessment": "Role-dependent",
+      "evidence": "Strong self-worth when working suggests achievement orientation, but retirement has disrupted the primary achievement channel."
+    },
+    {
+      "aptitude": "Alignment",
+      "assessment": "Moderate",
+      "evidence": "Core beliefs guide voting and values decisions. However, alignment is expressed as rigid adherence rather than flexible integration."
+    },
+    {
+      "aptitude": "Restraint",
+      "assessment": "Developing",
+      "evidence": "Self-describes as 'sometimes abrupt' and 'headstrong.' Restraint is recognized as a growth area but not yet consistently practiced."
+    }
+  ],
+  "shadow_indicators": [
+    {
+      "root": "Root fear → loss of identity and relevance",
+      "expression": "Identity Collapse: Retirement severed the primary source of self-worth (work role), leaving a void that manifests as disconnection and lack of purpose. Without the structure of work, Eric struggles to locate himself.",
+      "antidote": "Build identity anchors beyond employment: structured volunteering, mentoring, community roles. Daily practice: name one way you contributed today that had nothing to do with earning money."
+    },
+    {
+      "root": "Root anger → boundary violation and loss of autonomy",
+      "expression": "Fortress Response: When others offer unsolicited advice or 'get involved in my business,' anger activates as a protective wall. This keeps threats out but also keeps connection out.",
+      "antidote": "Distinguish between genuine intrusion and caring involvement. Practice: 'They might be trying to help' reframe. Choose one instance per week to receive input with curiosity before deciding whether to accept or decline it."
+    },
+    {
+      "root": "Root avoidance → substance-mediated self-regulation",
+      "expression": "Chemical Override: Narcotics intake dictates energy level and mood. The substance becomes the primary regulation tool, bypassing the development of internal emotional and somatic resources.",
+      "antidote": "Work with medical provider on harm-reduction timeline. Build one non-substance energy practice (brief walk, cold water on wrists, 5-minute stretch). Track: 'What gave me energy today that wasn't a substance?'"
+    },
+    {
+      "root": "Root shame → vulnerability avoidance",
+      "expression": "Brevity as Armor: Short, guarded responses and fighting the inner voice suggest discomfort with deeper self-exploration. Vulnerability is experienced as weakness rather than strength.",
+      "antidote": "Micro-disclosures: share one genuine feeling per day with a trusted person. Journal prompt: 'What am I afraid people would think if they really knew me?' Normalize vulnerability as courage."
+    }
+  ],
+  "somatic_panel": {
+    "early_warnings": [
+      "Rising anxiety (chest tightness, racing thoughts)",
+      "Confusion or mental fog (precursor to anger eruption)",
+      "Energy crash tied to substance cycle timing",
+      "Impulse to shut down conversation or withdraw"
+    ],
+    "green_lights": [
+      "Steady energy without substance-driven peaks/troughs",
+      "Engaged in hands-on building or creating",
+      "Calm, fact-based conversation without defensive posture",
+      "Moments of connection where others' views are heard"
+    ],
+    "reset_protocols": [
+      "Three-breath pause: inhale 4, hold 4, exhale 6. Repeat three times before responding when anger rises.",
+      "Hands check: unclench fists, relax jaw, drop shoulders. Physical softening interrupts the anger cascade.",
+      "One-sentence redirect: 'I notice I'm getting heated. Let me take a minute.' Then walk briefly."
+    ]
+  },
+  "awareness_summary": "Eric presents as a retired professional navigating a significant identity transition without adequate internal resources. His center of gravity at S4 reflects a life organized around duty, role, and rule-based reasoning—structures that served him well during his career but now leave him adrift. The emerging S5 capacity shows in his practical intelligence and nascent self-awareness, but these remain narrowly applied. His most significant growth edges are: (1) developing emotional granularity beyond the anxiety-confusion-anger loop, (2) building non-substance energy regulation, (3) creating post-retirement identity anchors, and (4) cultivating relational openness. Eric has real strengths—decisiveness, directness, economic stewardship, and a willingness to stay the course with his medication journey—that provide a solid foundation for growth.",
+  "hexaco_traits": [
+    {
+      "trait": "Honesty-Humility",
+      "assessment": "Moderate",
+      "note": "Values straightforwardness and fact-based engagement; direct about his positions. Limited evidence of humility or self-questioning."
+    },
+    {
+      "trait": "Emotionality",
+      "assessment": "Moderate-High (under-regulated)",
+      "note": "Anxiety and anger are present and impactful but poorly differentiated. Emotional experiencing is intense but vocabulary is narrow."
+    },
+    {
+      "trait": "Extraversion",
+      "assessment": "Moderate",
+      "note": "Willing to speak up in groups but not consistently social. Retirement isolation suggests extraversion needs were met through work role."
+    },
+    {
+      "trait": "Agreeableness",
+      "assessment": "Low-Moderate",
+      "note": "Self-described as abrupt, opinionated, headstrong. Difficulty accommodating different views. Values autonomy over harmony."
+    },
+    {
+      "trait": "Conscientiousness",
+      "assessment": "Moderate-High",
+      "note": "Responsible economic stewardship; maintains medication regimen. Structured, duty-oriented approach to commitments."
+    },
+    {
+      "trait": "Openness to Experience",
+      "assessment": "Low-Moderate",
+      "note": "Creative expression diminished from youth. Limited spiritual exploration. Intellectual curiosity is pragmatic rather than exploratory."
+    }
+  ],
+  "practice_plan": {
+    "theme": "Reconnect, Regulate, Rebuild. Develop inner resources to replace role-based identity with purpose-based living.",
+    "weekly_cadence": [
+      "Three structured social connections (at least one non-transactional).",
+      "Two hands-on creative sessions (building, fixing, crafting—anything tangible).",
+      "One 'curiosity conversation'—ask someone about their experience without offering your own position.",
+      "One weekly energy review: what gave energy vs. what drained it."
+    ],
+    "daily_minimums": [
+      "5-minute morning stillness (sit, breathe, notice body sensations before doing anything).",
+      "Three emotion-naming moments: pause and label what you're feeling with a specific word.",
+      "One act of contribution that is not about money (hold a door, make a call, help a neighbor).",
+      "10-minute walk outside (no phone, notice surroundings)."
+    ],
+    "five_practices": [
+      {
+        "name": "Focus on the Positive",
+        "application": "Before getting out of bed, name one thing you're looking forward to today—even if small."
+      },
+      {
+        "name": "Prime Ahead",
+        "application": "Before any social interaction, set one intention: 'I will listen first' or 'I will stay curious.'"
+      },
+      {
+        "name": "Name it to Tame it",
+        "application": "When anxiety or anger arises, say the specific emotion aloud or write it down. 'I'm feeling frustrated because...' The naming interrupts the escalation."
+      },
+      {
+        "name": "Shift / Open / Stay",
+        "application": "When triggered by unsolicited advice: Shift attention to breathing; Open awareness to what the person might intend; Stay present for 90 seconds before responding."
+      },
+      {
+        "name": "Zooming",
+        "application": "Sunday evening review: What worked this week? Where did I connect? Where did anger take over? What will I try differently?"
+      }
+    ],
+    "if_then_protocols": [
+      "If anxiety is rising → Then three-breath pause (in 4, hold 4, out 6) before any action or words.",
+      "If anger erupts at unsolicited advice → Then say 'Let me think about that' and physically step back. Revisit in 30 minutes.",
+      "If energy crashes and substance craving spikes → Then 5-minute cold water on wrists + brief walk. Track what preceded the crash.",
+      "If feeling purposeless or disconnected → Then pick up a project, call one person, or volunteer for one task."
+    ],
+    "agreements_boundaries": [
+      "Morning stillness is non-negotiable—it comes before news, phone, or tasks.",
+      "Anger is information, not a directive. I will pause before it becomes action.",
+      "I will not isolate for more than one full day without reaching out to someone.",
+      "I will discuss medication management with my healthcare provider at least quarterly."
+    ],
+    "milestones": [
+      "≥ 60 emotion-naming reps completed (documented).",
+      "≥ 12 curiosity conversations held (one/week minimum).",
+      "≥ 24 creative/building sessions logged.",
+      "Energy log shows ≥ 2 identified non-substance energy levers being used regularly.",
+      "At least 3 new social/community connections established."
+    ],
+    "reflection_prompts": [
+      "Where did I stay curious instead of shutting down this week?",
+      "What gave me energy that had nothing to do with substances or earning money?",
+      "Who did I connect with meaningfully? What made it meaningful?",
+      "Where did anger show up—and what was underneath it?"
+    ]
+  },
+  "therapist_handoff": {
+    "stage": "S4 Loyal Belonger with emerging S5 Skilled Specialist capacities. Falls back to S3/S2 (anger-driven reactivity, rigid boundary defense) under perceived threat or energy depletion.",
+    "hemispheric_tilt": "Left-dominant. Strength in practical problem-solving and sequential reasoning. Right-hemisphere capacities (somatic awareness, emotional granularity, relational attunement) are significantly underdeveloped and represent the primary growth frontier.",
+    "somatic_profile": {
+      "stress_signs": "Anxiety → confusion → anger cascade; energy crashes tied to substance cycle; mental fog; impulse to withdraw or shut down.",
+      "green_lights": "Steady energy, hands-on engagement, calm fact-based conversation, moments of genuine listening.",
+      "reset_levers": "Breath regulation (extended exhale), physical softening (hands/jaw), brief walking, naming emotions."
+    },
+    "strengths": [
+      "Decisiveness and willingness to act on problems (does not freeze).",
+      "Directness and clarity in communication.",
+      "Economic stewardship and responsible financial management.",
+      "Commitment to medication regimen despite difficulty.",
+      "Self-awareness of behavioral patterns (abruptness, opinioned nature) even if not yet modulating."
+    ],
+    "risks": [
+      "Substance dependence mediating energy and mood; limited non-substance regulation tools.",
+      "Identity crisis post-retirement; self-worth tightly coupled to work role and earning.",
+      "Narrow emotional vocabulary creating an anxiety-to-anger pipeline without intermediate processing.",
+      "Social isolation accelerating post-retirement; relational skills limited to role-based contexts.",
+      "Rigidity in perspectives may resist therapeutic exploration initially.",
+      "Anger as primary coping mechanism may mask underlying grief and loss."
+    ],
+    "clinical_interventions": [
+      "Motivational interviewing approach: honor his autonomy and directness while gently expanding perspective.",
+      "Emotion differentiation work: build vocabulary beyond anxious/confused/angry (affect labeling exercises).",
+      "Behavioral activation for retirement adjustment: structured activities providing purpose and social connection.",
+      "Harm reduction framework for substance management in collaboration with prescribing provider.",
+      "Somatic awareness building: body scan practices, tension tracking, breath regulation.",
+      "Narrative identity work: help construct a post-work identity narrative that integrates past achievements with new purpose.",
+      "Anger unpacking: explore what's underneath the anger (grief, fear, shame) with gradual exposure to vulnerability."
+    ]
+  },
+  "qa_table": [
+    {
+      "category": "Intro framing",
+      "status": "Pass"
+    },
+    {
+      "category": "Stage Estimate",
+      "status": "Pass"
+    },
+    {
+      "category": "Hemispheric Bias",
+      "status": "Pass"
+    },
+    {
+      "category": "Power Center Analysis",
+      "status": "Pass"
+    },
+    {
+      "category": "Power Center KPIs",
+      "status": "Pass"
+    },
+    {
+      "category": "Core Aptitudes",
+      "status": "Pass"
+    },
+    {
+      "category": "Shadow Indicators",
+      "status": "Pass"
+    },
+    {
+      "category": "Somatic Signature Panel",
+      "status": "Pass"
+    },
+    {
+      "category": "Awareness Quotient Summary",
+      "status": "Pass"
+    },
+    {
+      "category": "90-Day Practice Plan",
+      "status": "Pass"
+    },
+    {
+      "category": "Therapist Handoff Page",
+      "status": "Pass"
+    },
+    {
+      "category": "Appendix",
+      "status": "Pass"
+    }
+  ]
+}

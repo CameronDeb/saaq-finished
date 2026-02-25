@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120">
+  <!-- Three overlapping circles - Mark Pirtle's Venn diagram logo -->
+  <!-- Colors: olive/dark green, rust/brown, teal/blue -->
+  <defs>
+    <clipPath id="clip">
+      <rect x="0" y="0" width="120" height="120"/>
+    </clipPath>
+  </defs>
+  <g clip-path="url(#clip)">
+    <!-- Bottom-left circle: olive/dark green -->
+    <circle cx="42" cy="72" r="32" fill="#4A5A2B" opacity="0.9"/>
+    <!-- Bottom-right circle: rust/brown -->
+    <circle cx="78" cy="72" r="32" fill="#A0522D" opacity="0.9"/>
+    <!-- Top circle: teal/blue -->
+    <circle cx="60" cy="42" r="32" fill="#2E75B6" opacity="0.9"/>
+    <!-- Overlap areas - lighter/white blend -->
+    <circle cx="42" cy="72" r="32" fill="white" opacity="0.15"/>
+    <circle cx="78" cy="72" r="32" fill="white" opacity="0.15"/>
+    <circle cx="60" cy="42" r="32" fill="white" opacity="0.15"/>
+    <!-- Center triple overlap -->
+    <circle cx="60" cy="60" r="8" fill="white" opacity="0.35"/>
+  </g>
+</svg>
