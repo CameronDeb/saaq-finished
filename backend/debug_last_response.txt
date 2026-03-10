@@ -1,0 +1,334 @@
+{
+  "subject": "John Doe",
+  "report_date": "March 08, 2026",
+  "version": "15Q",
+  "stage_estimate": {
+    "title": "S6 -> S7 (Results Driver toward Perspective Connector)",
+    "evidence_current": {
+      "stage": "S6 (Results Driver)",
+      "items": [
+        "Pragmatic problem-solving: 'I stayed calm, exchanged info, and filed the claim. It was annoying but I handled it' - efficient, task-focused response to challenge",
+        "Strategic compromise: 'I wanted to save money but also wanted to travel. I ended up doing a cheaper trip and felt like that was a good middle ground' - goal optimization between competing desires",
+        "Practical inner voice: 'My inner voice is usually pretty practical. It says things like just get it done or stop overthinking' - action-oriented self-management",
+        "Financial pragmatism: 'I budget and save' - systematic resource management characteristic of S6 efficiency"
+      ]
+    },
+    "evidence_emerging": {
+      "stage": "S7 (Perspective Connector)",
+      "items": [
+        "Awareness of others' perspectives: 'If someone has a totally different view I'll ask questions' and recognition that boss 'assumed I didn't care about a project because I was quiet' - growing awareness of multiple viewpoints",
+        "Reading emotional states: 'I'm decent at reading others but I don't always know what to do with what I pick up' - capacity for empathy emerging but not yet integrated",
+        "Self-awareness about relational impact: 'People say I'm easygoing but sometimes I wish I was more assertive' - recognizing how others experience him and wanting to expand range"
+      ]
+    },
+    "fallbacks": [
+      "Isolation under stress: 'I get really quiet. I tend to isolate and scroll my phone until it passes' - withdrawing rather than connecting",
+      "Emotional suppression: 'I hold things in and process later' - delaying emotional engagement",
+      "Minimal creative engagement: 'Not much honestly. I used to draw as a kid but now I mostly just consume content' - falling back to passive consumption"
+      ],
+    "verdict": "John operates primarily from S6, demonstrating pragmatic problem-solving, efficient task management, and strategic goal optimization. His handling of the fender bender and financial decisions show classic Results Driver functionality. However, he is clearly at the leading edge of this stage, with emerging S7 capacities visible in his growing awareness of multiple perspectives, his ability to read others emotionally, and his recognition that his quiet style creates misunderstandings. The transition challenge is evident in his statement 'I don't always know what to do with what I pick up' - he has the perceptual capacity for perspective-taking but hasn't yet developed the relational tools to act on it. His wish to be 'more assertive' suggests an intuition that effective leadership requires more than efficient task completion. The key developmental work is integrating emotional awareness with relational action, moving from solitary processing to connected dialogue."
+  },
+  "hemispheric_bias": {
+    "title": "Left-Dominant (Analytical Task Manager)",
+    "description": "John shows strong left-hemisphere dominance through his pragmatic, linear problem-solving approach and compartmentalized emotional processing. His response to the fender bender - 'stayed calm, exchanged info, filed the claim' - exemplifies sequential, logical processing. His inner voice is 'practical' with directives like 'just get it done' and 'stop overthinking,' reflecting left-hemisphere preference for closure and action over reflection. Financial behavior is systematic: 'I budget and save,' showing categorical organization. However, right-hemisphere processing emerges in moments of stress and relational awareness. He notices somatic signals ('jaw clenches'), reads others emotionally ('decent at reading others'), and feels most connected in nature, suggesting intact right-hemisphere perception that is underutilized. The phrase 'I don't always know what to do with what I pick up' reveals the integration gap - his right hemisphere perceives relational and emotional data, but his left-dominant processing doesn't have frameworks to act on it. His creative dormancy ('I used to draw as a kid but now I mostly just consume content') and tendency to 'hold things in and process later' further indicate left-hemisphere overreliance, processing emotions analytically rather than experientially."
+  },
+  "power_centers": [
+    {
+      "name": "Vital (Physical/Sexual)",
+      "assessment": "Underdeveloped",
+      "notes": "Acknowledges 'I sleep enough but I don't exercise much. I feel better when I'm active but it's hard to stay consistent.' Recognition without action indicates awareness but low vitality investment. No mention of physical pleasure, embodiment, or sexual energy."
+    },
+    {
+      "name": "Emotional",
+      "assessment": "Constrained",
+      "notes": "Suppressive pattern: 'I hold things in and process later.' Somatic stress response ('jaw clenches') but immediate behavioral withdrawal ('get really quiet... isolate and scroll my phone'). Inner voice 'sometimes harsh' suggests unintegrated self-criticism. Decent perceptual capacity but limited expressive range."
+    },
+    {
+      "name": "Relational",
+      "assessment": "Emerging",
+      "notes": "Capacity to read others ('decent at reading others') but limited behavioral repertoire ('don't always know what to do with what I pick up'). Boss misunderstanding shows communication gaps. Values authenticity ('can't stand people who are fake') and admires reliability ('show up when it matters'). Loyal but passive in friendships."
+    },
+    {
+      "name": "Social/Leadership",
+      "assessment": "Passive-Receptive",
+      "notes": "Group role: 'I'm usually the one who listens.' Described as 'easygoing' but wishes to be 'more assertive.' Learned to speak up after being misunderstood but appears reactive rather than proactive. No evidence of initiative-taking or vision-casting."
+    },
+    {
+      "name": "Financial",
+      "assessment": "Functional-Cautious",
+      "notes": "'I budget and save' shows competence and discipline. However, 'sometimes feel guilty spending on myself even when I can afford it' reveals scarcity psychology despite adequate resources. Money appears managed through restraint rather than generative abundance."
+    },
+    {
+      "name": "Creative",
+      "assessment": "Dormant",
+      "notes": "Former capacity: 'I used to draw as a kid.' Current state: 'now I mostly just consume content. I'd like to create more.' Clear desire without activation. Creative energy appears sublimated into efficient consumption rather than expression."
+    },
+    {
+      "name": "Intellectual",
+      "assessment": "Pragmatic-Functional",
+      "notes": "Practical problem-solving evident throughout. Inner voice emphasizes efficiency ('just get it done'). Asks questions when encountering different views but 'don't always engage deeply' suggests utilitarian rather than philosophical orientation. Focused on application over exploration."
+    },
+    {
+      "name": "Spiritual",
+      "assessment": "Latent-Unstructured",
+      "notes": "'I believe there's something out there but I don't practice anything specific. Nature is probably where I feel most connected.' Intuitive sense of transcendence without framework or practice. Connection is passive (nature) rather than cultivated through discipline."
+    }
+  ],
+  "power_center_kpis": [
+    {
+      "center": "Vital",
+      "kpi": "Weekly movement sessions",
+      "baseline": "Inconsistent, < 1x/week intentional exercise",
+      "target": "3x/week 30+ min sessions (any modality)"
+    },
+    {
+      "center": "Emotional",
+      "kpi": "Real-time emotion naming",
+      "baseline": "Suppresses, processes later, scrolls to avoid",
+      "target": "Name emotion within 5 minutes of noticing somatic signal 4x/week"
+    },
+    {
+      "center": "Relational",
+      "kpi": "Initiated vulnerable conversations",
+      "baseline": "Reactive, waits for misunderstanding to occur",
+      "target": "Initiate 2 conversations/week sharing authentic feeling or need"
+    },
+    {
+      "center": "Social/Leadership",
+      "kpi": "Voice contributions in groups",
+      "baseline": "Default listener, speaks when prompted or after being misunderstood",
+      "target": "Offer perspective unprompted 2x per meeting/gathering"
+    },
+    {
+      "center": "Financial",
+      "kpi": "Guilt-free spending moments",
+      "baseline": "Guilt even when affordable, scarcity mindset",
+      "target": "1 intentional 'abundance practice' purchase weekly, journal guilt level"
+    },
+    {
+      "center": "Creative",
+      "kpi": "Active creation time",
+      "baseline": "Zero creation, 100% consumption",
+      "target": "2 hours/week hands-on creation (drawing, writing, making anything)"
+    },
+    {
+      "center": "Intellectual",
+      "kpi": "Deep engagement conversations",
+      "baseline": "Surface questions with different views, doesn't engage deeply",
+      "target": "1 conversation/week exploring idea beyond pragmatic application"
+    },
+    {
+      "center": "Spiritual",
+      "kpi": "Intentional connection practice",
+      "baseline": "Passive nature connection, no structure",
+      "target": "15 min/day structured practice (nature sit, meditation, breath, prayer)"
+    }
+  ],
+  "core_aptitudes": [
+    {
+      "aptitude": "Autonomy/Influence",
+      "assessment": "Moderate-Autonomous",
+      "evidence": "Strong personal boundaries ('friend wanted me to lie... I said no') and independent decision-making. However, limited influence capacity - describes self as listener rather than shaper. Autonomy present, influence underdeveloped."
+    },
+    {
+      "aptitude": "Drive",
+      "assessment": "Moderate-Steady",
+      "evidence": "Consistent in domains he's committed to (budgeting, work tasks) but lacks activation in others (exercise, creativity). Inner voice pushes for completion ('just get it done') but not for expansion or achievement beyond baseline."
+    },
+    {
+      "aptitude": "Perseverance",
+      "assessment": "Selective-High",
+      "evidence": "Financial discipline ('budget and save') shows sustained commitment. However, 'hard to stay consistent' with exercise and creative dormancy ('used to draw... now I mostly just consume') reveal selective application. Perseveres in structured domains, struggles with self-directed ones."
+    },
+    {
+      "aptitude": "Achievement",
+      "assessment": "Moderate-Practical",
+      "evidence": "Achievement orientation appears functional rather than aspirational. 'Cheaper trip' as middle ground shows satisficing rather than optimizing. Started 'speaking up more' after misunderstanding but reactive rather than proactive goal-setting. No evidence of stretch goals or ambitious targets."
+    },
+    {
+      "aptitude": "Alignment",
+      "assessment": "Moderate-High",
+      "evidence": "Clear values ('can't stand people who are fake,' refused to lie for friend) with behavioral consistency. However, gap between values and action in some domains ('I'd like to create more' without follow-through). Strong alignment in ethics, weaker in aspirational self-image."
+    },
+    {
+      "aptitude": "Restraint",
+      "assessment": "High",
+      "evidence": "Restraint is dominant pattern: 'I get really quiet... isolate,' 'I hold things in,' 'careful with money,' 'feel guilty spending on myself.' Inner voice can be 'harsh,' suggesting over-control. Emotional suppression and passivity in groups indicate restraint overdevelopment relative to expression."
+    }
+  ],
+  "shadow_indicators": [
+    {
+      "root": "Fear of visibility -> Passive self-protection",
+      "expression": "Withdrawal Under Scrutiny: When John feels observed or evaluated, he becomes 'really quiet' and retreats into listener role. The boss misunderstanding ('assumed I didn't care because I was quiet') reveals how his protective silence creates the opposite of his intention. Phone scrolling when 'overwhelmed or afraid' is dissociative avoidance. His wish to be 'more assertive' is blocked by fear that speaking up invites judgment or conflict.",
+      "antidote": "Start with low-stakes visibility practice: Share one observation per meeting before anxiety builds. Reframe speaking up from 'demanding attention' to 'offering gift of perspective.' When jaw clenches, use it as cue to speak within 60 seconds rather than withdraw. Practice 'I notice' statements that share perception without requiring defense. Track moments of successful visibility in journal to build counter-evidence to fear narrative."
+    },
+    {
+      "root": "Shame of neediness -> Self-sufficiency inflation",
+      "expression": "Isolated Processing: 'I hold things in and process later' and tendency to 'isolate' reveals belief that needing others is weakness. Financial guilt ('feel guilty spending on myself even when I can afford it') extends to emotional economy - can't 'afford' to need support. Admires people who 'show up when it matters' but doesn't call them when he needs showing up for. Self-reliance has calcified into disconnection.",
+      "antidote": "Micro-vulnerability experiments: Share one feeling before it's 'processed' each week. Reframe asking for support as 'letting others show up when it matters' for you. Practice receiving: when someone offers help, say yes before analyzing if you 'really need it.' Notice the harsh inner voice ('sometimes it's harsh') and ask: 'Would I talk to a friend this way?' Self-compassion as bridge to receiving compassion from others."
+    },
+    {
+      "root": "Anger at self-abandonment -> Creative suppression",
+      "expression": "Consumption as Replacement: 'I used to draw as a kid but now I mostly just consume content' is grief masked as preference. The phrase 'I'd like to create more' without action suggests anger turned inward - punishing creative self for being impractical. Inner voice saying 'just get it done' and 'stop overthinking' may be silencing creative impulses as frivolous. Pragmatism has become tyranny.",
+      "antidote": "Reclaim 'useless' creation: 15 minutes daily making something with zero utility or audience. Draw badly. Write nonsense. Permission to be inefficient. Reframe creativity from 'indulgence' to 'vital nutrient' - track energy and mood on creation days vs. consumption days. Explore what voice says 'that's a waste of time' when creative impulse arises. Grieve the artist kid who was told to be practical."
+    }
+  ],
+  "somatic_panel": {
+    "early_warnings": [
+      "Jaw clenching (primary stress signal)",
+      "Going quiet/withdrawing in conversation",
+      "Reaching for phone to scroll (dissociative impulse)",
+      "Inner voice becoming harsh or commanding ('just get it done')"
+    ],
+    "green_lights": [
+      "Feeling 'good' after values-aligned action (like refusing to lie)",
+      "Physical activity leading to 'feel better' state",
+      "Connection in nature ('where I feel most connected')",
+      "Successful middle-ground solutions that satisfy multiple needs"
+    ],
+    "reset_protocols": [
+      "Jaw Release Protocol: Notice clench -> breathe into jaw -> vocalize (hum, sigh) on exhale -> say one true thing out loud",
+      "Phone Interrupt: When reaching to scroll -> pause -> place hand on heart -> name the feeling underneath the urge -> choose: feel it or move it (walk, stretch)",
+      "Isolation Circuit Breaker: Set 20-minute timer when isolating -> at bell, send one text to one person (doesn't have to be deep) -> notice what happens in body"
+    ]
+  },
+  "awareness_summary": "John demonstrates solid S6 functionality with emerging S7 capacities creating productive developmental tension. He is pragmatic, values-aligned, and capable - handling challenges like the fender bender with calm efficiency and maintaining clear boundaries when asked to compromise integrity. His self-awareness is notable: he recognizes his jaw clenching under stress, knows he isolates when overwhelmed, understands that others see him as easygoing while he wishes for more assertiveness, and acknowledges the gap between his desire to create and his actual consumption patterns. This level of honest self-observation is a significant strength. However, John's growth edge centers on integration and expression. He can read others emotionally but doesn't know what to do with that information. He holds feelings in to 'process later' rather than using them as real-time relational data. His practical inner voice serves him well in task domains but sometimes becomes harsh, and his restraint - visible in financial guilt, emotional suppression, and social passivity - has overdeveloped relative to his expressive capacities. The transition to S7 requires John to trust that speaking his authentic perspective, feeling his emotions in real time, and creating 'impractical' things are not indulgences but necessary nutrients for wholeness. His statement 'most people are too busy worrying about themselves to judge me' shows he's intellectually released concern about others' judgment, but his behavioral patterns (silence, isolation, consumption over creation) suggest the embodied release hasn't yet occurred. The developmental invitation is to bring his strong observer capacity into active, vulnerable, visible participation - to move from watching himself and others to risking being truly seen."
+  },
+  "hexaco_traits": [
+    {
+      "trait": "Honesty-Humility",
+      "assessment": "High",
+      "note": "Refused to lie for friend despite awkwardness; admires consistency; dislikes fakeness; acknowledges limitations honestly ('I don't always know what to do')"
+    },
+    {
+      "trait": "Emotionality",
+      "assessment": "Moderate",
+      "note": "Notices somatic stress signals (jaw clenching); decent at reading others; but suppresses own emotions ('hold things in') and isolates when overwhelmed rather than seeking support"
+    },
+    {
+      "trait": "Extraversion",
+      "assessment": "Low-Moderate",
+      "note": "Group role is listener; gets 'really quiet' under stress; tends to isolate; wishes to be more assertive but defaults to passive-receptive social stance"
+    },
+    {
+      "trait": "Agreeableness",
+      "assessment": "Moderate-High",
+      "note": "Described as 'easygoing'; listens in groups; asks questions with different views; however, has boundaries (refused to lie) and dislikes people who 'talk over others'"
+    },
+    {
+      "trait": "Conscientiousness",
+      "assessment": "High",
+      "note": "Budgets and saves; practical inner voice ('just get it done'); handled fender bender efficiently; however, selective consistency (struggles with exercise despite knowing benefits)"
+    },
+    {
+      "trait": "Openness to Experience",
+      "assessment": "Moderate",
+      "note": "Willing to ask questions about different views but 'don't always engage deeply'; creative capacity dormant (doesn't draw anymore, mostly consumes); spiritual sense present but unstructured; some intellectual curiosity but pragmatically bounded"
+    }
+  ],
+  "practice_plan": {
+    "theme": "Voice Before Perfection: Building embodied expressiveness through micro-acts of visibility, emotional immediacy, and creative play.",
+    "weekly_cadence": [
+      "3x physical movement sessions (any kind, 30+ min) - embodiment anchor",
+      "2x creative making time (1 hour blocks, no product goal) - expression anchor",
+      "1x nature sit (20+ min, no phone, just presence) - spiritual anchor",
+      "Weekly review: What did I say that mattered? What did I not say? - integration anchor"
+    ],
+    "daily_minimums": [
+      "Morning: 5-minute body scan with jaw release practice",
+      "Emotion check-in: Name feeling within 5 minutes of noticing physical signal (especially jaw clench)",
+      "One authentic statement per day in conversation (before overthinking)",
+      "Evening: 3-minute journal - one thing expressed, one thing suppressed, what I learned"
+    ],
+    "five_practices": [
+      {
+        "name": "Focus on the Positive",
+        "application": "Track 'green lights' - when you feel good after speaking up, after moving your body, after creating something, after acting on values. Journal these weekly. Notice you already have evidence that expression and action feel better than suppression and withdrawal. Build on what works rather than forcing what feels unnatural."
+      },
+      {
+        "name": "Prime Ahead",
+        "application": "Before meetings or social situations where you typically default to listener role, set micro-intention: 'I will offer one perspective in the first 10 minutes.' Before creative time, remind yourself: 'This doesn't have to be good or useful.' Before difficult conversations, prime: 'I can be both kind and honest.' Priming interrupts automatic passivity."
+      },
+      {
+        "name": "Name it to Tame it",
+        "application": "When jaw clenches: Immediately name the emotion (frustrated, scared, overwhelmed, angry). Say it out loud if alone, write it if with others. Don't process later - name now. When reaching for phone to scroll: Name the feeling you're avoiding. 'I'm anxious and want to numb out.' Naming interrupts the suppression loop and prevents isolation spiral."
+      },
+      {
+        "name": "Shift / Open / Stay",
+        "application": "When you notice yourself going quiet and withdrawing: SHIFT posture (uncross arms, lift chest, release jaw). OPEN (take full breath, make eye contact if with others, look up if alone). STAY (resist urge to isolate or scroll for 2 minutes, notice what emerges). This practice directly counters your stress pattern of jaw clench -> silence -> isolation."
+      },
+      {
+        "name": "Zooming",
+        "application": "When harsh inner voice appears ('just get it done,' 'stop overthinking'): Zoom out - ask 'Is this urgency real or habitual?' Zoom in - 'What am I actually feeling right now?' When spending guilt arises: Zoom out - 'What's the big picture of my financial health?' Zoom in - 'What does this specific desire tell me about what I value?' Use zooming to interrupt pragmatism-as-tyranny."
+      }
+    ],
+    "if_then_protocols": [
+      "IF jaw clenches -> THEN pause, breathe into jaw, name emotion out loud, speak one true thing within 60 seconds (don't go silent)",
+      "IF reaching for phone to scroll when stressed -> THEN hand on heart, name the feeling, choose: express it to someone OR move it through body (walk, stretch)",
+      "IF in group and defaulting to listener for 10+ minutes -> THEN offer one observation before overthinking ('I notice...' or 'I'm curious about...')",
+      "IF harsh inner voice appears -> THEN pause and ask 'Would I say this to a friend?' Rephrase with compassion",
+      "IF creative impulse arises -> THEN act within 5 minutes (even for 2 minutes) before practical voice dismisses it"
+    ],
+    "agreements_boundaries": [
+      "I will not process emotions alone for more than 20 minutes before sharing with at least one person (text counts)",
+      "I will speak in meetings before the halfway point (no more waiting until prompted)",
+      "I will spend money on one 'want' per week without justifying its productivity value"
+    ],
+    "milestones": [
+      "Week 4: Initiate one vulnerable conversation unprompted (share feeling or need without waiting for misunderstanding)",
+      "Week 6: Create something (drawing, writing, building) and share it with one person despite imperfection",
+      "Week 8: Speak up in group setting about something that matters before anxiety talk you out of it",
+      "Week 12: Review journal - identify pattern of what makes expression easier vs. harder, adjust practices accordingly"
+    ],
+    "reflection_prompts": [
+      "This week, when did I feel most alive? What was I doing with my voice, body, and energy?",
+      "What did I not say this week that wanted to be said? What was I protecting by staying silent?",
+      "Where did restraint serve me? Where did it cost me connection or aliveness?",
+      "If my creative kid-self could see my life now, what would they want me to know?"
+    ]
+  },
+  "therapist_handoff": {
+    "stage": "S6 -> S7 transition. Client demonstrates solid pragmatic functioning with emerging perspective-taking and emotional awareness. Core developmental task is integrating right-hemisphere perceptual data (emotional reading, somatic signals, relational nuance) with behavioral expression. Restraint and cognitive processing are overdeveloped; spontaneity, vulnerability, and creative expression are underdeveloped. Risk: continuing suppression could calcify into alexithymia or relational distance. Opportunity: client has insight, motivation, and values-alignment to support integration work.",
+    "hemispheric_tilt": "Strong left-hemisphere dominance with intact but underutilized right-hemisphere perception. Sequential problem-solving, compartmentalized emotional processing, practical inner monologue, and analytical approach to feelings ('hold things in and process later') indicate left bias. However, client notices somatic signals, reads others emotionally, and feels spiritual connection in nature - showing right hemisphere is active but not integrated into decision-making or relational behavior. Therapeutic focus: experiential and somatic modalities to build trust in right-hemisphere processing; practice immediate emotional expression vs. delayed analysis.",
+    "somatic_profile": {
+      "stress_signs": "Primary: jaw clenching. Secondary: verbal shutdown (goes 'really quiet'), social withdrawal (isolates), dissociation (phone scrolling). Pattern is consistent: somatic activation -> silence -> isolation -> numbing. Client has good awareness of these signals.",
+      "green_lights": "Physical activity (acknowledges feeling 'better when I'm active'), nature immersion ('where I feel most connected'), values-aligned action (felt 'good' after refusing to lie), successful problem-solving (calm handling of fender bender). These are reliable positive state inducers.",
+      "reset_levers": "Physical movement breaks suppression pattern most effectively. Vocalization (speaking truth, humming, sighing) releases jaw tension. Brief social contact (even text) interrupts isolation spiral. Nature exposure provides spiritual regulation. Client responds to structured protocols and would benefit from explicit if-then planning."
+    },
+    "strengths": [
+      "Self-awareness: Accurately identifies patterns, physical signals, emotional tendencies, and growth edges without defensiveness",
+      "Values clarity: Strong ethical compass, willing to tolerate social discomfort for integrity",
+      "Pragmatic competence: Handles practical challenges efficiently, maintains financial discipline, problem-solves effectively",
+      "Emotional perceptiveness: Reads others well, notices relational dynamics, demonstrates empathy capacity",
+      "Motivation for growth: Explicitly wants to be more assertive, create more, engage more deeply - has agency and direction"
+    ],
+    "risks": [
+      "Emotional suppression pattern could deepen into alexithymia or psychosomatic symptoms (jaw issues, tension-related conditions)",
+      "Isolation tendency under stress increases vulnerability to depression, especially if life stressors accumulate",
+      "Passive relational stance may create pattern of being overlooked or misunderstood in professional/personal contexts",
+      "Creative dormancy and consumption habits suggest possible anhedonia or low-grade depression worth screening",
+      "Financial guilt despite adequacy may indicate broader shame dynamics or scarcity trauma worth exploring"
+    ],
+    "clinical_interventions": [
+      "Somatic Experiencing or Sensorimotor Psychotherapy: Address jaw clenching and suppression pattern through body-based processing; build capacity for real-time emotional expression",
+      "Assertiveness training with emotion-focused component: Not just communication skills but exploring fear/shame blocks to visibility; role-play speaking up in progressively challenging scenarios",
+      "Parts work (IFS or similar): Dialogue between practical manager part (inner voice saying 'just get it done') and creative/emotional parts; explore protective function of suppression",
+      "Creative arts therapy or expressive modality: Reactivate dormant creative capacity through structured therapeutic context; process grief about abandoned artist self",
+      "Interpersonal Process Group: Safe environment to practice real-time emotional expression, receive feedback about interpersonal impact, experiment with assertiveness while building connection vs. isolation"
+    ]
+  },
+  "qa_table": [
+    {"category": "Intro framing", "status": "Pass"},
+    {"category": "Stage Estimate", "status": "Pass"},
+    {"category": "Hemispheric Bias", "status": "Pass"},
+    {"category": "Power Center Analysis", "status": "Pass"},
+    {"category": "Power Center KPIs", "status": "Pass"},
+    {"category": "Core Aptitudes", "status": "Pass"},
+    {"category": "Shadow Indicators", "status": "Pass"},
+    {"category": "Somatic Signature Panel", "status": "Pass"},
+    {"category": "Awareness Quotient Summary", "status": "Pass"},
+    {"category": "90-Day Practice Plan", "status": "Pass"},
+    {"category": "Therapist Handoff Page", "status": "Pass"},
+    {"category": "Appendix", "status": "Pass"}
+  ]
+}

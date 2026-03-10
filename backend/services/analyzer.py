@@ -4,6 +4,7 @@ Sends survey responses to Claude API → returns structured report JSON.
 """
 import json
 import os
+import re
 from datetime import datetime
 from anthropic import Anthropic
 
@@ -13,6 +14,83 @@ def get_client() -> Anthropic:
     if not api_key:
         raise ValueError("ANTHROPIC_API_KEY not set")
     return Anthropic(api_key=api_key)
+
+
+def _clean_and_parse_json(text: str) -> dict:
+    """Robustly parse JSON from Claude's response, fixing common issues."""
+    # Strip markdown fences if present
+    if text.startswith("```"):
+        text = text.split("\n", 1)[1]
+    if text.endswith("```"):
+        text = text.rsplit("```", 1)[0]
+    text = text.strip()
+
+    # Remove any leading text before the first {
+    first_brace = text.find("{")
+    if first_brace > 0:
+        text = text[first_brace:]
+
+    # First attempt: parse as-is
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as e:
+        # "Extra data" means valid JSON + junk after it
+        if "Extra data" in str(e):
+            decoder = json.JSONDecoder()
+            result, _ = decoder.raw_decode(text)
+            return result
+
+    # Fix common issues
+    # Replace smart quotes with regular quotes
+    text = text.replace("\u201C", "'").replace("\u201D", "'")
+    text = text.replace("\u2018", "'").replace("\u2019", "'")
+    # Fix tabs and other whitespace
+    text = text.replace("\t", " ")
+    # Fix trailing commas before } or ]
+    text = re.sub(r',\s*([}\]])', r'\1', text)
+
+    # Second attempt
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as e:
+        if "Extra data" in str(e):
+            decoder = json.JSONDecoder()
+            result, _ = decoder.raw_decode(text)
+            return result
+
+    # Third attempt: extract largest JSON object
+    match = re.search(r'\{[\s\S]*\}', text)
+    if match:
+        try:
+            return json.loads(match.group())
+        except json.JSONDecodeError as e:
+            if "Extra data" in str(e):
+                decoder = json.JSONDecoder()
+                result, _ = decoder.raw_decode(match.group())
+                return result
+
+    # Fourth attempt: remove everything after last }
+    last_brace = text.rfind("}")
+    if last_brace >= 0:
+        try:
+            return json.loads(text[:last_brace + 1])
+        except json.JSONDecodeError:
+            pass
+
+    # Final attempt: try fixing unescaped backslashes
+    text_fixed = text.replace("\\", "\\\\").replace('\\\\"', '\\"')
+    try:
+        return json.loads(text_fixed)
+    except json.JSONDecodeError as e:
+        # Save the raw response for debugging
+        debug_path = os.path.join(os.path.dirname(__file__), "..", "debug_last_response.txt")
+        try:
+            with open(debug_path, "w", encoding="utf-8") as f:
+                f.write(text)
+            print(f" DEBUG: Raw response saved to {debug_path}")
+        except Exception:
+            pass
+        raise ValueError(f"Failed to parse Claude response as JSON: {e}")
 
 
 def build_prompt(subject: str, responses: dict[str, str]) -> str:
@@ -33,7 +111,13 @@ Analyze the following survey responses for {subject} and produce a comprehensive
 ## YOUR TASK
 Produce a JSON object with the following structure. Be specific, evidence-based, and compassionate.
 Every claim must be grounded in the actual survey text. Use direct references to what the person said.
-Use curly/smart quotes (\u201C \u201D) for any quotes within string values to avoid JSON parsing issues.
+
+IMPORTANT JSON RULES:
+- Do NOT use smart/curly quotes anywhere. Use only straight single quotes (') inside string values.
+- Do NOT use unescaped backslashes.
+- Do NOT include trailing commas.
+- Ensure all strings are properly closed.
+- Return ONLY the JSON object, nothing else. No text before or after the JSON.
 
 ## STAGE MODEL (S1-S10)
 - S1 Reactive Self: Impulse-led, minimal regulation
@@ -48,7 +132,7 @@ Use curly/smart quotes (\u201C \u201D) for any quotes within string values to av
 - S10 Meta-Builder: Synthesizes paradigms, transpersonal
 
 ## OUTPUT FORMAT
-Return ONLY valid JSON (no markdown fences, no preamble) matching this schema:
+Return ONLY valid JSON (no markdown fences, no preamble, no text after the closing brace) matching this schema:
 
 {{
   "subject": "{subject}",
@@ -56,7 +140,7 @@ Return ONLY valid JSON (no markdown fences, no preamble) matching this schema:
   "version": "{version}",
 
   "stage_estimate": {{
-    "title": "S[N] \u2192 S[N+1] (Stage Name toward Next Stage Name)",
+    "title": "S[N] -> S[N+1] (Stage Name toward Next Stage Name)",
     "evidence_current": {{
       "stage": "S[N] (Stage Name)",
       "items": ["evidence 1 with quotes from responses", "evidence 2", "evidence 3", "evidence 4"]
@@ -107,7 +191,7 @@ Return ONLY valid JSON (no markdown fences, no preamble) matching this schema:
 
   "shadow_indicators": [
     {{
-      "root": "Root [fear/anger/shame/avoidance] \u2192 core dynamic",
+      "root": "Root [fear/anger/shame/avoidance] -> core dynamic",
       "expression": "Pattern Name: How it shows up specifically for this person.",
       "antidote": "Specific practices and reframes tailored to this person."
     }}
@@ -141,7 +225,7 @@ Return ONLY valid JSON (no markdown fences, no preamble) matching this schema:
       {{"name": "Shift / Open / Stay", "application": "Personalized"}},
       {{"name": "Zooming", "application": "Personalized"}}
     ],
-    "if_then_protocols": ["If X \u2192 Then Y (specific to their patterns)", "protocol 2", "protocol 3"],
+    "if_then_protocols": ["If X -> Then Y (specific to their patterns)", "protocol 2", "protocol 3"],
     "agreements_boundaries": ["boundary 1", "boundary 2", "boundary 3"],
     "milestones": ["milestone 1 (measurable)", "milestone 2", "milestone 3", "milestone 4"],
     "reflection_prompts": ["prompt 1", "prompt 2", "prompt 3"]
@@ -181,8 +265,8 @@ CRITICAL:
 2. Be compassionate but honest. Growth-oriented, not flattering.
 3. Shadow indicators must identify REAL patterns specific to THIS person.
 4. The 90-day plan must be realistic and specific.
-5. Use curly quotes (\u201C\u201D) for any quoted text within JSON strings.
-6. Return ONLY valid JSON. No markdown, no preamble, no explanation."""
+5. Use only straight quotes (') inside strings. NO smart quotes.
+6. Return ONLY valid JSON. No markdown, no preamble, no explanation, no text after the closing brace."""
 
 
 async def analyze_responses(subject: str, responses: dict[str, str]) -> dict:
@@ -198,15 +282,7 @@ async def analyze_responses(subject: str, responses: dict[str, str]) -> dict:
     )
 
     text = message.content[0].text.strip()
-
-    # Strip markdown fences if present
-    if text.startswith("```"):
-        text = text.split("\n", 1)[1]
-        if text.endswith("```"):
-            text = text.rsplit("```", 1)[0]
-        text = text.strip()
-
-    return json.loads(text)
+    return _clean_and_parse_json(text)
 
 
 def analyze_responses_sync(subject: str, responses: dict[str, str]) -> dict:
@@ -222,10 +298,4 @@ def analyze_responses_sync(subject: str, responses: dict[str, str]) -> dict:
     )
 
     text = message.content[0].text.strip()
-    if text.startswith("```"):
-        text = text.split("\n", 1)[1]
-        if text.endswith("```"):
-            text = text.rsplit("```", 1)[0]
-        text = text.strip()
-
-    return json.loads(text)
+    return _clean_and_parse_json(text)
