@@ -4,14 +4,14 @@ import { api } from '../api/client'
 import Logo from '../components/Logo'
 
 const QUESTIONS_15Q = [
-  "Tell us about a recent challenge. What happened, and how did you deal with it?",
+  "Describe a recent challenge. What happened, and how did you deal with it?",
   "When you're overwhelmed or afraid, what happens in your body, and how does it show up in your behavior?",
   "Looking back, how has your understanding of yourself and the world changed most over the years?",
   "Tell us about a time when you felt misunderstood. How did you handle it, and what did you learn?",
   "Tell us about a time when your values were tested. What did you discover about yourself?",
-  "Can you describe a moment when you felt pulled between two opposing values, impulses, or desires? How did you navigate it?",
+  "Can you describe a moment when you felt pulled between two opposing values, impulses, or desires? How did you navigate that conflict?",
   "What do you notice about your inner voice or self-talk? How do you relate to it?",
-  "How do you typically process emotions — your own and others'? Have strong feelings ever clouded your clarity?",
+  "How do you typically process emotions\u2014your own and others'? Have strong feelings ever clouded your clarity?",
   "In groups, what role do you most often play? How do others tend to experience you?",
   "How do you stay open to people with very different views? What helps you stay connected?",
   "What really gets under your skin about other people? What do you most admire?",
@@ -21,12 +21,45 @@ const QUESTIONS_15Q = [
   "How do you understand or connect with something larger than yourself (God, spirit, Universe)?",
 ]
 
+const QUESTIONS_30Q = [
+  "Describe a recent challenge. What happened, and how did you deal with it?",
+  "When you're overwhelmed or afraid, what happens in your body, and how does it show up in your behavior?",
+  "Looking back, how has your understanding of yourself and the world changed most over the years?",
+  "Tell us about a time when you felt misunderstood. How did you handle it, and what did you learn?",
+  "Tell us about a time when your values were tested. What did you discover about yourself?",
+  "Can you describe a moment when you felt pulled between two opposing values, impulses, or desires? How did you navigate that conflict?",
+  "What do you notice about your inner voice or self-talk? How do you relate to it?",
+  "How do you typically process emotions\u2014your own and others'? Have strong feelings ever clouded your clarity?",
+  "In groups, what role do you most often play? How do others tend to experience you?",
+  "How do you stay open to people with very different views? What helps you stay connected?",
+  "What really gets under your skin about other people? What do you most admire?",
+  "Tell us about a relationship that deeply shaped you\u2014for better or worse. How did you respond, and what did you learn?",
+  "How do you relate to your body and energy right now? Has this changed over time?",
+  "What is money?",
+  "How do you relate to money? What habits, emotions, or stories come up around earning, spending, saving, or investing?",
+  "What is time?",
+  "How do you relate to time? What habits, emotions, or stories come up around your experience of time?",
+  "What role do creativity and imagination play in your life? How do you express them?",
+  "How do you understand or connect with something larger than yourself (God, spirit, Universe)?",
+  "When you've been involved in a group or community, what role did you naturally play?",
+  "How do you challenge your own thinking? Tell us about a person, idea, book, insight, or experience that challenged and stretched your perspective.",
+  "Tell us about a time when you followed through on something difficult. What drove you?",
+  "Tell us about a time when you had to hold back \u2014 when restraint mattered more than action.",
+  "Tell us about a time when you could have taken advantage of a situation but chose not to. What guided your choice?",
+  "When it comes to tasks and commitments, how do you balance thoroughness with efficiency?",
+  "Think of a time when you influenced others without relying on authority. How did you gain their trust or move them toward action?",
+  "What gives your life meaning? Has that sense of purpose changed over the years?",
+  "When you face setbacks, what does your self-talk sound like?",
+  "How do you respond when someone disappoints you or doesn't meet your expectations?",
+  "What kinds of new ventures, ideas, art, or experiences most inspire or stretch you?",
+]
+
 export default function IntakeForm() {
   const { version = '15Q' } = useParams()
   const navigate = useNavigate()
   const textareaRef = useRef(null)
 
-  const questions = QUESTIONS_15Q
+  const questions = version === '30Q' ? QUESTIONS_30Q : QUESTIONS_15Q
   const [step, setStep] = useState(-1) // -1 = name/email, 0+ = questions
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -76,7 +109,6 @@ export default function IntakeForm() {
       navigate('/thank-you', { state: { name: name.trim() } })
     } catch (err) {
       console.error('Submit failed:', err)
-      // If API is down, save locally and still show thank you
       localStorage.setItem('saaq_pending_submission', JSON.stringify({
         first_name: name.trim(),
         email: email.trim(),
@@ -98,6 +130,7 @@ export default function IntakeForm() {
           <div className="flex items-center gap-2">
             <Logo size={28} />
             <span className="font-display text-sa-700 text-lg font-semibold">SAAQ</span>
+            <span className="text-xs text-gray-400 ml-1">{version}</span>
           </div>
           {step >= 0 && (
             <div className="text-sm text-gray-500">
@@ -128,6 +161,11 @@ export default function IntakeForm() {
               </h2>
               <p className="text-gray-500 mb-8">
                 Before we begin, please tell us your name. This will be used to personalize your report.
+                {version === '30Q' && (
+                  <span className="block mt-2 text-sm text-sa-600">
+                    You're taking the extended {questions.length}-question assessment.
+                  </span>
+                )}
               </p>
 
               <div className="space-y-5">

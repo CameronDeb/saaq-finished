@@ -35,9 +35,9 @@ export default function Landing() {
             A whole-person snapshot of how you relate to yourself, others, and the world — right now.
           </p>
           <p className="text-sa-300 text-base leading-relaxed mb-10 max-w-lg mx-auto">
-            This reflective assessment takes 15–30 minutes. There are no right or wrong answers.
-            Your honest, thoughtful responses will generate a personalized developmental report
-            with practical insights and a 90-day growth plan.
+            This reflective assessment takes 15–45 minutes depending on the version you choose. 
+            There are no right or wrong answers. Your honest, thoughtful responses will generate 
+            a personalized developmental report with practical insights and a 90-day growth plan.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -45,11 +45,25 @@ export default function Landing() {
               to="/assessment/15Q"
               className="inline-flex items-center justify-center px-8 py-4 bg-white text-sa-700 font-semibold rounded-xl hover:bg-sa-50 transition shadow-lg hover:shadow-xl text-lg"
             >
-              Begin Assessment
+              15-Question Assessment
               <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
               </svg>
             </Link>
+            <Link
+              to="/assessment/30Q"
+              className="inline-flex items-center justify-center px-8 py-4 bg-sa-500 text-white font-semibold rounded-xl hover:bg-sa-400 transition shadow-lg hover:shadow-xl text-lg border border-sa-400"
+            >
+              30-Question Deep Dive
+              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </Link>
+          </div>
+
+          <div className="flex justify-center gap-8 mt-6 text-sa-400 text-sm">
+            <span>15Q — ~15 min</span>
+            <span>30Q — ~30–45 min</span>
           </div>
 
           <p className="text-sa-400 text-xs mt-8">
