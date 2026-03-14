@@ -2,14 +2,16 @@
 SAAQ Analyzer Service
 Sends survey responses to Claude API → returns structured report JSON.
 
-v5 — All fixes:
+v6 — All fixes:
   - Epistemic restraint, confidence calibration, observation vs inference
   - Sharper aptitude logic (shutdown ≠ restraint)
   - Developmental hemispheric framing
   - QA table validates reasoning quality
   - Narrative thickness detection
   - AI-assisted JSON repair as final fallback
-  - 16000 max tokens for 30Q responses
+  - 20000 max tokens for 30Q responses
+  - STAGE-SPECIFIC EVIDENCE RULES: meta-awareness is S9, not S7
+  - Clear distinctions between what counts as evidence for each stage
 """
 import json
 import os
@@ -80,7 +82,7 @@ def _clean_and_parse_json(text: str, client=None) -> dict:
             model = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
             fix_msg = client.messages.create(
                 model=model,
-                max_tokens=20000,
+                max_tokens=16000,
                 messages=[{
                     "role": "user",
                     "content": f"The following JSON is malformed. Fix it and return ONLY valid JSON. Do not add any text before or after. Do not use markdown fences. Just the fixed JSON:\n\n{text[:30000]}"
@@ -124,7 +126,6 @@ def build_prompt(subject: str, responses: dict[str, str]) -> str:
     version = "30Q" if num_q > 20 else "15Q"
     today = datetime.now().strftime("%B %d, %Y")
 
-    # Determine narrative thickness
     if avg_words < 20:
         thickness = "THIN"
         thickness_instruction = "Responses are SHORT and THIN. You MUST significantly lower confidence, reduce psychological depth claims, simplify therapist handoff language, and avoid deep wound formulations. State only what is directly observable."
@@ -144,87 +145,89 @@ Analyze the following survey responses for {subject} and produce a comprehensive
 ## NARRATIVE THICKNESS: {thickness} (average {avg_words} words per response)
 {thickness_instruction}
 
-## CRITICAL EPISTEMIC RULES — READ CAREFULLY
+## CRITICAL EPISTEMIC RULES
 
-1. EPISTEMIC RESTRAINT: You MUST use hedged, calibrated language throughout. NEVER assert inferred psychological dynamics as established fact.
-   - REQUIRED phrases: 'suggests', 'may indicate', 'appears consistent with', 'worth exploring', 'tentative hypothesis', 'the data points toward', 'this pattern could reflect'
-   - FORBIDDEN phrases: 'clearly shows', 'demonstrates that', 'reveals deep', 'proves', 'confirms', 'is driven by', 'stems from' (when describing inferred internal states)
-   - Example: Instead of 'worthiness issues drive his guilt around spending' write 'the guilt around spending may suggest an underlying worthiness theme worth exploring'
+1. EPISTEMIC RESTRAINT: Use hedged, calibrated language throughout. NEVER assert inferred psychological dynamics as fact.
+   - REQUIRED phrases: 'suggests', 'may indicate', 'appears consistent with', 'worth exploring', 'tentative hypothesis'
+   - FORBIDDEN phrases: 'clearly shows', 'demonstrates that', 'reveals deep', 'proves', 'confirms', 'is driven by', 'stems from'
 
 2. OBSERVATION vs INFERENCE: In EVERY section, clearly distinguish:
    - What the respondent EXPLICITLY SAID (use their actual words with single quotes)
-   - What you INFER from that (flag with 'this may suggest', 'one possible reading is', 'this pattern appears consistent with')
-   Never blend these. The reader must always know which is data and which is interpretation.
+   - What you INFER from that (flag with 'this may suggest', 'one possible reading is')
 
-3. CONFIDENCE CALIBRATION: Your confidence level MUST match the data thickness.
-   - Short/vague answers = low confidence, surface-level observations only
-   - Detailed/specific answers = moderate confidence, tentative hypotheses allowed
-   - Rich/emotional/specific answers = higher confidence, deeper interpretation permitted
-   - NEVER make deep shame/wound/identity formulations from a single short answer
+3. CONFIDENCE CALIBRATION: Match confidence to data thickness.
+   - Short/vague answers = low confidence, surface-level only
+   - Detailed/specific answers = moderate confidence, tentative hypotheses
+   - Rich/emotional answers = higher confidence, deeper interpretation (still hedged)
+   - NEVER make deep wound/shame formulations from a single short answer
 
-4. APTITUDE LOGIC — CRITICAL DISTINCTIONS:
-   - RESTRAINT is NOT the same as shutdown, suppression, inhibition, avoidance, or going quiet. Restraint is the MATURE capacity to consciously pause and choose wisely. If someone withdraws, goes silent, or numbs out, that is avoidance or shutdown — NOT restraint. Score restraint as 'underdeveloped' or 'distorted' if the person shows shutdown patterns.
-   - AGENCY is NOT just taking action. It is experiencing oneself as a SOURCE of action rather than a recipient of circumstance. Passivity, over-accommodation, and chronic deference suggest LOW agency.
-   - PERSEVERANCE must be distinguished from compulsive pushing through. Healthy perseverance includes the ability to rest and recalibrate.
-   - APPRECIATION is the capacity to recognize value beyond personal attainment — the shift from 'doing' to 'valuing'. Look for evidence of gratitude, recognition of others, and awareness of meaning beyond personal success.
+## STAGE-SPECIFIC EVIDENCE RULES — CRITICAL
 
-5. HEMISPHERIC FRAMING:
-   - Use DEVELOPMENTAL and PHENOMENOLOGICAL language, NOT neurological claims
-   - Say 'left-tilted processor' NOT 'significant left-hemispheric dominance'
-   - Say 'right-hemisphere capacities appear underused' NOT 'right hemisphere is underdeveloped'
-   - NEVER recommend interventions using neurological justifications
-   - Frame as processing STYLE and TENDENCY, not brain structure
+You MUST only attribute evidence to the correct stage. DO NOT mix up similar-sounding concepts across stages. Here is what counts as valid evidence for each stage:
 
-6. SHADOW INDICATORS:
-   - Identify real patterns but frame them as hypotheses, not diagnoses
-   - Use 'possible', 'may reflect', 'worth exploring' for deeper formulations
-   - Do NOT build elaborate wound narratives from single short answers
-   - The antidote should be practical and proportionate to what the data actually supports
+S1 Reactive Self: Pure impulse, no regulation, force/avoidance in conflict
+S2 Boundary Pusher: Testing limits, experimenting with control, rules as external
+S3 Tribal Belonger: Identity fused with group, conformity for belonging, us-vs-them
+S4 Loyal Belonger: Duty-bound, role-based identity, right/wrong binary thinking, rule-following, seeks order/predictability
+S5 Skilled Specialist: Precision, expertise focus, mastery of systems, analytical rigor, procedural competence, can be perfectionistic
+S6 Results Driver: Pragmatic goal-orientation, strategic thinking, measuring success by outcomes, efficiency focus, can over-drive
+S7 Perspective Connector: SPECIFICALLY — holding multiple perspectives simultaneously, genuine empathy for opposing views, valuing dialogue over debate, seeking win-win, ethical action that considers multiple stakeholders. NOTE: Simple perspective-taking or asking questions about others' views is NOT necessarily S7 — it can appear at S5/S6. True S7 involves genuinely holding multiple valid viewpoints without collapsing into one.
+S8 Systems Architect: Designing systems from core values, self-authored identity, integrating multiple perspectives into coherent strategy, vision-driven
+S9 Integrative Seer: META-AWARENESS (seeing self AND systems as constructed), holding paradox without resolution, comfortable with fundamental ambiguity, transpersonal humility. NOTE: Meta-awareness is EXCLUSIVELY S9. Do NOT attribute it to S7 or any earlier stage.
+S10 Meta-Builder: Synthesizing paradigms into new wholes, ecosystem-level work, transpersonal perspective
 
-7. THERAPIST HANDOFF:
-   - Frame as 'structured reflections for clinical consideration' NOT case formulation
-   - Use 'possible themes', 'areas to explore', 'preliminary observations'
-   - Do NOT use clinical diagnostic language unless the respondent explicitly described those experiences
-   - This section should help a therapist know where to START exploring, not what to conclude
+CRITICAL STAGE DISTINCTIONS — DO NOT CONFUSE THESE:
+- META-COGNITION (thinking about your own thinking) can appear as early as S5. It is NOT evidence of S7 or S9.
+- META-AWARENESS (seeing the self as a constructed perspective, recognizing all frameworks as partial) is S9 ONLY.
+- PERSPECTIVE-TAKING (trying to understand someone else's view) appears at S5/S6. It becomes S7 only when multiple perspectives are held simultaneously as equally valid without defaulting to one.
+- SELF-REFLECTION (noticing your own patterns) appears at S5+. It is NOT automatically S7 evidence.
+- COMPLEXITY RECOGNITION (acknowledging gray areas) can be S6. It becomes S7 when the person actively values and seeks out opposing perspectives, not just acknowledges they exist.
+- EMPATHY (feeling for others) appears at many stages. S7 empathy specifically involves understanding AND valuing fundamentally different worldviews.
 
-8. QA TABLE:
-   - Score each section on REASONING QUALITY, not just whether the section exists
-   - Use 'Pass' only if the section is well-evidenced and epistemically restrained
-   - Use 'Conditional — [reason]' if the section is plausible but confidence exceeds evidence
-   - Use 'Needs Review — [reason]' if claims significantly exceed the data
+## APTITUDE LOGIC — CRITICAL DISTINCTIONS
 
-## YOUR TASK
-Produce a JSON object. Be specific, evidence-based, and compassionate.
-Every claim must be grounded in actual survey text. Use direct references to what the person said.
+The seven SAAQ aptitudes form a developmental ladder:
+Agency -> Drive -> Perseverance -> Achievement -> Appreciation -> Alignment -> Restraint
 
-IMPORTANT JSON RULES:
-- Do NOT use smart/curly quotes anywhere. Use only straight single quotes (') inside string values.
-- Do NOT use unescaped backslashes or trailing commas.
-- Make sure every string is properly closed with a double quote.
+- RESTRAINT is NOT shutdown, suppression, inhibition, avoidance, or going quiet. It is MATURE capacity to consciously pause and choose wisely. If someone withdraws, numbs, or goes silent, score as 'underdeveloped' or 'distorted.'
+- AGENCY is experiencing oneself as a SOURCE of action. Passivity and chronic deference = LOW agency.
+- PERSEVERANCE: distinguish from compulsive pushing through. Healthy perseverance includes ability to rest.
+- APPRECIATION: capacity to recognize value beyond personal attainment — shift from 'doing' to 'valuing.'
+
+## HEMISPHERIC FRAMING
+- Use DEVELOPMENTAL language, NOT neurological claims
+- Say 'left-tilted processor' NOT 'significant left-hemispheric dominance'
+- Frame as processing STYLE, not brain structure
+
+## SHADOW INDICATORS
+- Frame as hypotheses, not diagnoses
+- Use 'possible', 'may reflect', 'worth exploring'
+- Do NOT build wound narratives from single short answers
+
+## THERAPIST HANDOFF
+- Frame as 'structured reflections for clinical consideration'
+- Use 'possible themes', 'areas to explore', 'preliminary observations'
+- Should help therapist know where to START, not what to conclude
+
+## QA TABLE
+- Score REASONING QUALITY, not section completeness
+- 'Pass' = well-evidenced and epistemically restrained
+- 'Conditional — [reason]' = plausible but confidence may exceed evidence
+- 'Needs Review — [reason]' = claims exceed data
+
+## JSON RULES
+- Use only straight single quotes (') inside string values
+- No smart/curly quotes, no unescaped backslashes, no trailing commas
+- Make sure every string is properly closed
 - Return ONLY the JSON object. No text before or after.
 
 ## STAGE MODEL (S1-S10)
-SAAQ uses a ten-stage continuum. Our stage model is an original synthesis of respected developmental traditions: Jean Piaget's cognitive development; Jane Loevinger and Susanne Cook-Greuter's ego development research; Robert Kegan's subject-object theory; Clare Graves' value systems theory (Spiral Dynamics); Terri O'Fallon's STAGES model; and insights from contemplative and somatic psychology.
-
-- S1 Reactive Self: Impulse-led, minimal regulation
-- S2 Boundary Pusher: Tests limits, experiments with control
-- S3 Tribal Belonger: Identity fused with group/role
-- S4 Loyal Belonger: Duty, structure, role-based identity
-- S5 Skilled Specialist: Precision, expertise, mastery
-- S6 Results Driver: Goal-oriented, pragmatic, strategic
-- S7 Perspective Connector: Multiple perspectives, empathy, dialogue
-- S8 Systems Architect: Designs systems from core values
-- S9 Integrative Seer: Holds paradox, meta-awareness
-- S10 Meta-Builder: Synthesizes paradigms, transpersonal
-
-## SEVEN CORE APTITUDES (Developmental Ladder)
-Agency -> Drive -> Perseverance -> Achievement -> Appreciation -> Alignment -> Restraint
+SAAQ uses a ten-stage continuum. Our stage model is an original synthesis of: Jean Piaget's cognitive development; Jane Loevinger and Susanne Cook-Greuter's ego development; Robert Kegan's subject-object theory; Clare Graves' value systems theory (Spiral Dynamics); Terri O'Fallon's STAGES model; and contemplative/somatic psychology.
 
 ## POWER CENTERS
 Physical, Emotional, Relational, Social/Leadership, Financial, Creative, Intellectual, Spiritual
 
-## OUTPUT FORMAT
-Return ONLY valid JSON matching this schema:
+## OUTPUT FORMAT — RETURN ONLY VALID JSON:
 
 {{
   "subject": "{subject}",
@@ -235,19 +238,19 @@ Return ONLY valid JSON matching this schema:
     "title": "S[N] -> S[N+1] (Stage Name toward Next Stage Name)",
     "evidence_current": {{
       "stage": "S[N] (Stage Name)",
-      "items": ["OBSERVATION: respondent said '[quote]'. INFERENCE: this appears consistent with S[N] because...", "item 2", "item 3", "item 4"]
+      "items": ["OBSERVATION: respondent said '[quote]'. INFERENCE: this appears consistent with S[N] because [stage-specific reasoning]", "item 2", "item 3", "item 4"]
     }},
     "evidence_emerging": {{
       "stage": "S[N+1] (Stage Name)",
-      "items": ["OBSERVATION: respondent said '[quote]'. INFERENCE: this may suggest emerging S[N+1] capacity because...", "item 2", "item 3"]
+      "items": ["OBSERVATION: '[quote]'. INFERENCE: this may suggest emerging S[N+1] because [cite specific S[N+1] criteria from the stage rules above]", "item 2", "item 3"]
     }},
     "fallbacks": ["Under stress pattern 1", "pattern 2", "pattern 3"],
-    "verdict": "Calibrated paragraph with confidence level."
+    "verdict": "Calibrated paragraph with confidence level. Reference specific stage criteria."
   }},
 
   "hemispheric_bias": {{
     "title": "[Left/Right]-Tilted (developmental description)",
-    "description": "Paragraph using developmental framing only."
+    "description": "Developmental framing only. Distinguish observation from inference."
   }},
 
   "power_centers": [
@@ -279,7 +282,7 @@ Return ONLY valid JSON matching this schema:
     {{"aptitude": "Achievement", "assessment": "Level", "evidence": "Evidence"}},
     {{"aptitude": "Appreciation", "assessment": "Level", "evidence": "Evidence"}},
     {{"aptitude": "Alignment", "assessment": "Level", "evidence": "Evidence"}},
-    {{"aptitude": "Restraint", "assessment": "Level", "evidence": "CRITICAL: shutdown/suppression/avoidance = LOW restraint, not high"}}
+    {{"aptitude": "Restraint", "assessment": "Level", "evidence": "CRITICAL: shutdown/suppression/avoidance = LOW restraint"}}
   ],
 
   "shadow_indicators": [
@@ -296,7 +299,7 @@ Return ONLY valid JSON matching this schema:
     "reset_protocols": ["protocol 1", "protocol 2", "protocol 3"]
   }},
 
-  "awareness_summary": "Calibrated synthesis with confidence level stated.",
+  "awareness_summary": "Calibrated synthesis with confidence level.",
 
   "hexaco_traits": [
     {{"trait": "Honesty-Humility", "assessment": "Level", "note": "Evidence"}},
@@ -339,11 +342,11 @@ Return ONLY valid JSON matching this schema:
 
   "qa_table": [
     {{"category": "Intro framing", "status": "Pass/Conditional/Needs Review"}},
-    {{"category": "Stage Estimate", "status": "assessment"}},
+    {{"category": "Stage Estimate", "status": "assessment — check stage evidence matches stage-specific criteria"}},
     {{"category": "Hemispheric Bias", "status": "assessment"}},
     {{"category": "Power Center Analysis", "status": "assessment"}},
     {{"category": "Power Center KPIs", "status": "assessment"}},
-    {{"category": "Core Aptitudes", "status": "assessment"}},
+    {{"category": "Core Aptitudes", "status": "assessment — check restraint logic"}},
     {{"category": "Shadow Indicators", "status": "assessment"}},
     {{"category": "Somatic Signature Panel", "status": "assessment"}},
     {{"category": "Awareness Quotient Summary", "status": "assessment"}},
@@ -355,15 +358,16 @@ Return ONLY valid JSON matching this schema:
 
 FINAL REMINDERS:
 1. Cite specific words/phrases from responses.
-2. Match confidence to data thickness. Short answers = tentative only.
+2. Match confidence to data thickness.
 3. 7 aptitudes: Agency -> Drive -> Perseverance -> Achievement -> Appreciation -> Alignment -> Restraint.
 4. Restraint is MATURE SELF-GOVERNANCE. Shutdown/avoidance = LOW restraint.
 5. Hemispheric framing is DEVELOPMENTAL, not neurological.
 6. Shadows are HYPOTHESES, not diagnoses.
 7. Therapist handoff suggests areas to EXPLORE.
 8. QA table scores REASONING QUALITY.
-9. Use only straight quotes (') inside strings. NO smart quotes.
-10. Return ONLY valid JSON. No markdown, no preamble, no text after closing brace."""
+9. STAGE EVIDENCE MUST MATCH STAGE-SPECIFIC CRITERIA. Meta-awareness = S9 ONLY. Simple perspective-taking = S5/S6. True simultaneous perspective-holding = S7.
+10. Use only straight quotes (') inside strings. NO smart quotes.
+11. Return ONLY valid JSON. No markdown, no preamble, no text after closing brace."""
 
 
 async def analyze_responses(subject: str, responses: dict[str, str]) -> dict:
