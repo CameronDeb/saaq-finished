@@ -97,8 +97,10 @@ function dataCell(text, width, opts = {}) {
 
 // ─── Safe nested access ─────────────────────────────────────
 const stage = safeObj(data.stage_estimate);
-const stageCurrent = safeObj(stage.evidence_current);
-const stageEmerging = safeObj(stage.evidence_emerging);
+// Support both old format (evidence_current/emerging) and new (center_of_gravity/leading_edge/crash_stage)
+const stageCoG = safeObj(stage.center_of_gravity || stage.evidence_current);
+const stageEdge = safeObj(stage.leading_edge || stage.evidence_emerging);
+const stageCrash = safeObj(stage.crash_stage);
 const hemi = safeObj(data.hemispheric_bias);
 const somatic = safeObj(data.somatic_panel);
 const plan = safeObj(data.practice_plan);
@@ -150,12 +152,30 @@ children.push(sectionDivider());
 
 // === SECTION 1: STAGE ESTIMATE ===
 children.push(heading1(`1. Developmental Stage Estimate: ${safe(stage.title, "Assessment")}`));
-children.push(boldLabel(`Evidence of ${safe(stageCurrent.stage, "current stage")}:`, ""));
-for (const item of safeArr(stageCurrent.items)) { children.push(bulletItem(item, "evidence")); }
-children.push(boldLabel(`Evidence of ${safe(stageEmerging.stage, "emerging stage")} emerging:`, ""));
-for (const item of safeArr(stageEmerging.items)) { children.push(bulletItem(item, "evidence")); }
-children.push(boldLabel("Fallbacks under stress:", ""));
-for (const item of safeArr(stage.fallbacks)) { children.push(bulletItem(item, "evidence")); }
+
+// Center of Gravity
+children.push(boldLabel(`Center of Gravity \u2014 ${safe(stageCoG.stage, "current stage")}:`, ""));
+if (safeArr(stageCoG.domains_observed).length > 0) {
+  children.push(bodyText(`Domains observed: ${safeArr(stageCoG.domains_observed).join(", ")}`, { italics: true }));
+}
+for (const item of safeArr(stageCoG.evidence || stageCoG.items)) { children.push(bulletItem(item, "evidence")); }
+
+// Leading Edge
+children.push(boldLabel(`Leading Edge \u2014 ${safe(stageEdge.stage, "emerging stage")}:`, ""));
+if (safeArr(stageEdge.s7_criteria_met).length > 0) {
+  children.push(bodyText(`S7 structural criteria met: ${safeArr(stageEdge.s7_criteria_met).join("; ")}`, { italics: true }));
+}
+for (const item of safeArr(stageEdge.evidence || stageEdge.items)) { children.push(bulletItem(item, "evidence")); }
+
+// Crash Stage
+if (safe(stageCrash.stage)) {
+  children.push(boldLabel(`Crash Stage (under stress) \u2014 ${safe(stageCrash.stage)}:`, ""));
+  for (const item of safeArr(stageCrash.evidence)) { children.push(bulletItem(item, "evidence")); }
+} else if (safeArr(stage.fallbacks).length > 0) {
+  children.push(boldLabel("Fallbacks under stress:", ""));
+  for (const item of safeArr(stage.fallbacks)) { children.push(bulletItem(item, "evidence")); }
+}
+
 children.push(bodyText(""));
 children.push(boldLabel("Verdict:", safe(stage.verdict, "See above evidence.")));
 
