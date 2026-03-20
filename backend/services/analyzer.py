@@ -390,7 +390,7 @@ async def analyze_responses(subject: str, responses: dict[str, str]) -> dict:
     model = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
     prompt = build_prompt(subject, responses)
     message = client.messages.create(
-        model=model, max_tokens=20000,
+        model=model, max_tokens=40000,
         messages=[{"role": "user", "content": prompt}],
     )
     text = message.content[0].text.strip()
@@ -402,7 +402,7 @@ def analyze_responses_sync(subject: str, responses: dict[str, str]) -> dict:
     model = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
     prompt = build_prompt(subject, responses)
     message = client.messages.create(
-        model=model, max_tokens=20000,
+        model=model, max_tokens=40000,
         messages=[{"role": "user", "content": prompt}],
     )
     text = message.content[0].text.strip()
