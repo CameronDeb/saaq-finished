@@ -68,19 +68,22 @@ def _clean_and_parse_json(text: str, client=None) -> dict:
         try:
             print("  Attempting AI-assisted JSON repair...")
             model = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
-            fix_msg = client.messages.create(
+            fixed_text = ""
+            with client.messages.stream(
                 model=model, max_tokens=16000,
                 messages=[{"role": "user", "content": f"The following JSON is malformed. Fix it and return ONLY valid JSON. No text before or after. No markdown fences:\n\n{text[:30000]}"}],
-            )
-            ft = fix_msg.content[0].text.strip()
-            if ft.startswith("```"): ft = ft.split("\n", 1)[1]
-            if ft.endswith("```"): ft = ft.rsplit("```", 1)[0]
-            ft = ft.strip()
-            fb = ft.find("{")
-            if fb > 0: ft = ft[fb:]
-            lb = ft.rfind("}")
-            if lb >= 0: ft = ft[:lb + 1]
-            return json.loads(ft)
+            ) as stream:
+                for chunk in stream.text_stream:
+                    fixed_text += chunk
+            fixed_text = fixed_text.strip()
+            if fixed_text.startswith("```"): fixed_text = fixed_text.split("\n", 1)[1]
+            if fixed_text.endswith("```"): fixed_text = fixed_text.rsplit("```", 1)[0]
+            fixed_text = fixed_text.strip()
+            fb = fixed_text.find("{")
+            if fb > 0: fixed_text = fixed_text[fb:]
+            lb = fixed_text.rfind("}")
+            if lb >= 0: fixed_text = fixed_text[:lb + 1]
+            return json.loads(fixed_text)
         except Exception as e:
             print(f"  AI repair failed: {e}")
 
@@ -386,24 +389,39 @@ FINAL REMINDERS:
 
 
 async def analyze_responses(subject: str, responses: dict[str, str]) -> dict:
+    """Send responses to Claude API and return structured analysis."""
+    import asyncio
+    # Run sync streaming in a thread to avoid blocking the event loop
+    return await asyncio.to_thread(_analyze_sync, subject, responses)
+
+
+def _analyze_sync(subject: str, responses: dict[str, str]) -> dict:
+    """Internal sync function that does the actual API call with streaming."""
     client = get_client()
     model = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
     prompt = build_prompt(subject, responses)
-    message = client.messages.create(
-        model=model, max_tokens=40000,
+    text = ""
+    with client.messages.stream(
+        model=model, max_tokens=32000,
         messages=[{"role": "user", "content": prompt}],
-    )
-    text = message.content[0].text.strip()
+    ) as stream:
+        for chunk in stream.text_stream:
+            text += chunk
+    text = text.strip()
     return _clean_and_parse_json(text, client=client)
 
 
 def analyze_responses_sync(subject: str, responses: dict[str, str]) -> dict:
+    """Synchronous version for CLI/batch use."""
     client = get_client()
     model = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
     prompt = build_prompt(subject, responses)
-    message = client.messages.create(
-        model=model, max_tokens=40000,
+    text = ""
+    with client.messages.stream(
+        model=model, max_tokens=32000,
         messages=[{"role": "user", "content": prompt}],
-    )
-    text = message.content[0].text.strip()
+    ) as stream:
+        for chunk in stream.text_stream:
+            text += chunk
+    text = text.strip()
     return _clean_and_parse_json(text, client=client)
