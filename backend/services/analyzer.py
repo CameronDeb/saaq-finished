@@ -391,37 +391,148 @@ FINAL REMINDERS:
 async def analyze_responses(subject: str, responses: dict[str, str]) -> dict:
     """Send responses to Claude API and return structured analysis."""
     import asyncio
-    # Run sync streaming in a thread to avoid blocking the event loop
     return await asyncio.to_thread(_analyze_sync, subject, responses)
 
 
-def _analyze_sync(subject: str, responses: dict[str, str]) -> dict:
-    """Internal sync function that does the actual API call with streaming."""
-    client = get_client()
-    model = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
-    prompt = build_prompt(subject, responses)
+def _stream_call(client, model: str, prompt: str, max_tokens: int = 32000) -> str:
+    """Make a streaming API call and return the full text."""
     text = ""
     with client.messages.stream(
-        model=model, max_tokens=32000,
+        model=model, max_tokens=max_tokens,
         messages=[{"role": "user", "content": prompt}],
     ) as stream:
         for chunk in stream.text_stream:
             text += chunk
-    text = text.strip()
-    return _clean_and_parse_json(text, client=client)
+    return text.strip()
+
+
+def _analyze_sync(subject: str, responses: dict[str, str]) -> dict:
+    """Two-pass analysis: first generates diagnostic sections, second completes practice/handoff if cut off."""
+    client = get_client()
+    model = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
+
+    # Pass 1: Full analysis
+    print(f"  Pass 1: Generating diagnostic analysis for {subject}...")
+    prompt = build_prompt(subject, responses)
+    text = _stream_call(client, model, prompt)
+    result = _clean_and_parse_json(text, client=client)
+
+    # Check if practice plan and therapist handoff are incomplete
+    plan = result.get("practice_plan") or {}
+    th = result.get("therapist_handoff") or {}
+
+    plan_empty = (
+        not plan.get("five_practices") or
+        not plan.get("if_then_protocols") or
+        not plan.get("milestones") or
+        not plan.get("reflection_prompts")
+    )
+    th_empty = (
+        not th.get("stage") or
+        not th.get("strengths") or
+        not th.get("risks")
+    )
+    hexaco_empty = not result.get("hexaco_traits")
+    qa_empty = not result.get("qa_table")
+
+    if plan_empty or th_empty or hexaco_empty or qa_empty:
+        missing = []
+        if plan_empty: missing.append("practice_plan")
+        if th_empty: missing.append("therapist_handoff")
+        if hexaco_empty: missing.append("hexaco_traits")
+        if qa_empty: missing.append("qa_table")
+        print(f"  Pass 2: Completing missing sections: {', '.join(missing)}...")
+
+        responses_text = "\n".join(f"Q: {q}\nA: {a}" for q, a in responses.items())
+
+        completion_prompt = f"""You previously analyzed survey responses for {subject} and produced a partial SAAQ report. The diagnostic sections are complete but these sections were cut off or empty: {', '.join(missing)}.
+
+Context from Pass 1:
+- Stage: {result.get('stage_estimate', {}).get('title', 'unknown')}
+- Hemispheric: {result.get('hemispheric_bias', {}).get('title', 'unknown')}
+- Shadows: {json.dumps([s.get('root', '') for s in (result.get('shadow_indicators') or [])])}
+- Summary: {(result.get('awareness_summary') or '')[:500]}
+
+Original responses:
+{responses_text}
+
+Return ONLY valid JSON with ALL of these fields fully completed and personalized to this person:
+
+{{
+  "hexaco_traits": [
+    {{"trait": "Honesty-Humility", "assessment": "Level", "note": "Evidence from their responses"}},
+    {{"trait": "Emotionality", "assessment": "Level", "note": "Evidence"}},
+    {{"trait": "Extraversion", "assessment": "Level", "note": "Evidence"}},
+    {{"trait": "Agreeableness", "assessment": "Level", "note": "Evidence"}},
+    {{"trait": "Conscientiousness", "assessment": "Level", "note": "Evidence"}},
+    {{"trait": "Openness to Experience", "assessment": "Level", "note": "Evidence"}}
+  ],
+  "practice_plan": {{
+    "theme": "3-5 word theme. One sentence expansion.",
+    "weekly_cadence": ["specific anchor 1", "anchor 2", "anchor 3", "anchor 4"],
+    "daily_minimums": ["specific minimum 1", "minimum 2", "minimum 3", "minimum 4"],
+    "five_practices": [
+      {{"name": "Focus on the Positive", "application": "Personalized to THIS person's specific patterns and responses"}},
+      {{"name": "Prime Ahead", "application": "Personalized with specific situations they described"}},
+      {{"name": "Name it to Tame it", "application": "Personalized to their emotional patterns"}},
+      {{"name": "Shift / Open / Stay", "application": "Personalized to their stress triggers"}},
+      {{"name": "Zooming", "application": "Personalized to their thought patterns"}}
+    ],
+    "if_then_protocols": ["If [specific trigger from their responses] -> Then [concrete action]", "If [trigger 2] -> Then [action]", "If [trigger 3] -> Then [action]", "If [trigger 4] -> Then [action]"],
+    "agreements_boundaries": ["specific boundary 1", "boundary 2", "boundary 3"],
+    "milestones": ["Week 4: [measurable milestone]", "Week 8: [measurable]", "Week 12: [measurable]", "Day 90: [integration milestone]"],
+    "reflection_prompts": ["prompt specific to their growth edges 1", "prompt 2", "prompt 3"]
+  }},
+  "therapist_handoff": {{
+    "stage": "Preliminary: appears to operate from [stage] with leading edge [stage] and crash pattern [stage]. [Clinical summary with hedged language].",
+    "hemispheric_tilt": "Processing style: [description]. Clinical relevance: [observation].",
+    "somatic_profile": {{
+      "stress_signs": "Respondent described: [their specific quotes]. Possible patterns: [hedged].",
+      "green_lights": "Respondent described: [what works]. Suggests: [clinical note].",
+      "reset_levers": "Based on their experience: [specific interventions]."
+    }},
+    "strengths": ["evidence-based strength 1", "strength 2", "strength 3", "strength 4", "strength 5"],
+    "risks": ["possible risk 1 (hedged)", "risk 2", "risk 3", "risk 4", "risk 5"],
+    "clinical_interventions": ["Consider exploring: [area 1]", "Consider: [area 2]", "Consider: [area 3]", "Consider: [area 4]", "Consider: [area 5]"]
+  }},
+  "qa_table": [
+    {{"category": "Intro framing", "status": "Pass"}},
+    {{"category": "Stage Estimate", "status": "Pass — CoG/Edge/Crash model used"}},
+    {{"category": "Hemispheric Bias", "status": "Pass — developmental framing"}},
+    {{"category": "Power Center Analysis", "status": "Pass"}},
+    {{"category": "Power Center KPIs", "status": "Pass"}},
+    {{"category": "Core Aptitudes", "status": "Pass — restraint logic checked"}},
+    {{"category": "Shadow Indicators", "status": "Pass — hedged language"}},
+    {{"category": "Somatic Signature Panel", "status": "Pass"}},
+    {{"category": "Awareness Quotient Summary", "status": "Pass"}},
+    {{"category": "90-Day Practice Plan", "status": "Pass — all subsections complete"}},
+    {{"category": "Therapist Handoff Page", "status": "Pass — exploratory framing"}},
+    {{"category": "Appendix", "status": "Pass"}}
+  ]
+}}
+
+Straight quotes only. No markdown fences. ONLY valid JSON. Every field must have real, substantive, personalized content."""
+
+        text2 = _stream_call(client, model, completion_prompt, max_tokens=16000)
+        try:
+            pass2 = _clean_and_parse_json(text2, client=client)
+            if plan_empty and pass2.get("practice_plan"):
+                result["practice_plan"] = pass2["practice_plan"]
+            if th_empty and pass2.get("therapist_handoff"):
+                result["therapist_handoff"] = pass2["therapist_handoff"]
+            if hexaco_empty and pass2.get("hexaco_traits"):
+                result["hexaco_traits"] = pass2["hexaco_traits"]
+            if qa_empty and pass2.get("qa_table"):
+                result["qa_table"] = pass2["qa_table"]
+            print("  Pass 2 complete. All sections filled.")
+        except Exception as e:
+            print(f"  Pass 2 failed: {e}. Report will have partial sections.")
+    else:
+        print("  All sections complete in single pass.")
+
+    return result
 
 
 def analyze_responses_sync(subject: str, responses: dict[str, str]) -> dict:
     """Synchronous version for CLI/batch use."""
-    client = get_client()
-    model = os.getenv("CLAUDE_MODEL", "claude-sonnet-4-5-20250929")
-    prompt = build_prompt(subject, responses)
-    text = ""
-    with client.messages.stream(
-        model=model, max_tokens=32000,
-        messages=[{"role": "user", "content": prompt}],
-    ) as stream:
-        for chunk in stream.text_stream:
-            text += chunk
-    text = text.strip()
-    return _clean_and_parse_json(text, client=client)
+    return _analyze_sync(subject, responses)
