@@ -58,20 +58,46 @@ export default function IntakeForm() {
   const { version = '15Q' } = useParams()
   const navigate = useNavigate()
   const textareaRef = useRef(null)
+  const STORAGE_KEY = `saaq_progress_${version}`
 
   const questions = version === '30Q' ? QUESTIONS_30Q : QUESTIONS_15Q
-  const [step, setStep] = useState(-1) // -1 = name/email, 0+ = questions
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [answers, setAnswers] = useState({})
+
+  // Load saved progress from localStorage
+  const saved = (() => {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY)
+      return raw ? JSON.parse(raw) : null
+    } catch { return null }
+  })()
+
+  const [step, setStep] = useState(saved?.step ?? -1)
+  const [name, setName] = useState(saved?.name ?? '')
+  const [email, setEmail] = useState(saved?.email ?? '')
+  const [answers, setAnswers] = useState(saved?.answers ?? {})
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
+  const [restored, setRestored] = useState(saved?.step >= 0)
+
+  // Auto-save to localStorage on every change
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({ step, name, email, answers }))
+    } catch {}
+  }, [step, name, email, answers, STORAGE_KEY])
 
   useEffect(() => {
     if (step >= 0 && textareaRef.current) {
       textareaRef.current.focus()
     }
   }, [step])
+
+  // Dismiss restored banner after 5 seconds
+  useEffect(() => {
+    if (restored) {
+      const t = setTimeout(() => setRestored(false), 5000)
+      return () => clearTimeout(t)
+    }
+  }, [restored])
 
   const progress = step < 0 ? 0 : ((step + 1) / questions.length) * 100
 
@@ -106,6 +132,7 @@ export default function IntakeForm() {
       }
 
       await api.submitIntake(payload)
+      localStorage.removeItem(STORAGE_KEY)
       navigate('/thank-you', { state: { name: name.trim() } })
     } catch (err) {
       console.error('Submit failed:', err)
@@ -151,6 +178,15 @@ export default function IntakeForm() {
       )}
 
       {/* Content */}
+      {restored && (
+        <div className="bg-green-50 border-b border-green-200 px-6 py-3">
+          <div className="max-w-2xl mx-auto flex items-center justify-between">
+            <p className="text-green-700 text-sm">Your previous answers have been restored. You can pick up where you left off.</p>
+            <button onClick={() => setRestored(false)} className="text-green-500 hover:text-green-700 text-sm font-medium ml-4">Dismiss</button>
+          </div>
+        </div>
+      )}
+
       <main className="flex-1 flex items-start justify-center px-6 py-8 md:py-16">
         <div className="w-full max-w-2xl">
           {step === -1 ? (
@@ -167,6 +203,17 @@ export default function IntakeForm() {
                   </span>
                 )}
               </p>
+
+              <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6">
+                <p className="text-sm font-medium text-blue-800 mb-2">Tip: You can speak your answers instead of typing</p>
+                <ul className="text-xs text-blue-700 space-y-1">
+                  <li><strong>iPhone/iPad:</strong> Tap the microphone icon on your keyboard</li>
+                  <li><strong>Android:</strong> Tap the microphone icon on your keyboard</li>
+                  <li><strong>Mac:</strong> Press the Fn key twice, or go to Edit {'>'} Start Dictation</li>
+                  <li><strong>Windows:</strong> Press Windows key + H to start voice typing</li>
+                </ul>
+                <p className="text-xs text-blue-600 mt-2">Your answers auto-save as you go. Feel free to take breaks anytime.</p>
+              </div>
 
               <div className="space-y-5">
                 <div>
@@ -227,6 +274,12 @@ export default function IntakeForm() {
 
               <p className="text-xs text-gray-400 mt-2">
                 Write as much or as little as you'd like. Richer responses produce more personalized reports.
+              </p>
+              <p className="text-xs text-green-500 mt-1">
+                Your answers are auto-saved. You can close this page and come back anytime.
+              </p>
+              <p className="text-xs text-blue-400 mt-1">
+                Prefer to talk? Use voice dictation: Fn+Fn (Mac), Win+H (Windows), or the mic icon on your phone keyboard.
               </p>
 
               {error && <p className="text-red-500 text-sm mt-4">{error}</p>}
