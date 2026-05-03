@@ -1,84 +1,183 @@
-import { Link } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
+import { api } from '../api/client'
 import Logo from '../components/Logo'
 
 export default function Landing() {
+  const { isAuthenticated, isAdmin, user, logout } = useAuth()
+  const navigate = useNavigate()
+  const [prices, setPrices] = useState(null)
+  const [loadingCheckout, setLoadingCheckout] = useState(null)
+
+  useEffect(() => {
+    api.getPricing().then(res => setPrices(res.prices)).catch(() => {})
+  }, [])
+
+  const handleCheckout = async (productType) => {
+    if (!isAuthenticated) {
+      navigate('/signup', { state: { from: '/' } })
+      return
+    }
+    setLoadingCheckout(productType)
+    try {
+      const result = await api.createCheckout(productType)
+      window.location.href = result.checkout_url
+    } catch (err) {
+      alert(err.message)
+    } finally {
+      setLoadingCheckout(null)
+    }
+  }
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-sa-700 via-sa-800 to-sa-900 flex flex-col">
-      {/* Nav */}
-      <nav className="px-6 py-4 flex justify-between items-center max-w-6xl mx-auto w-full">
-        <div className="flex items-center gap-3">
-          <Logo size={40} />
-          <span className="text-white font-display text-lg font-semibold tracking-wide">
-            SkillfullyAware
-          </span>
+    <div className="min-h-screen bg-gray-50">
+      {/* nav */}
+      <nav className="bg-white border-b">
+        <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <Logo size={40} />
+            <span className="text-lg font-bold text-gray-800">SkillfullyAware</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <a href="#pricing" className="text-sm text-gray-600 hover:text-gray-800">Pricing</a>
+            {isAuthenticated ? (
+              <>
+                {isAdmin && <Link to="/dashboard" className="text-sm text-gray-600 hover:text-gray-800">Admin</Link>}
+                <Link to="/my" className="text-sm text-gray-600 hover:text-gray-800">My Account</Link>
+                <button onClick={logout} className="text-sm text-gray-400 hover:text-gray-600">Sign out</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login" className="text-sm text-gray-600 hover:text-gray-800">Sign in</Link>
+                <Link to="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">
+                  Get started
+                </Link>
+              </>
+            )}
+          </div>
         </div>
-        <Link to="/dashboard" className="text-sa-200 hover:text-white text-sm transition">
-          Admin
-        </Link>
       </nav>
 
-      {/* Hero */}
-      <main className="flex-1 flex items-center justify-center px-6 py-16">
-        <div className="max-w-2xl text-center">
-          <div className="flex justify-center mb-8">
-            <Logo size={96} />
+      {/* hero */}
+      <section className="max-w-3xl mx-auto px-6 pt-16 pb-12 text-center">
+        <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4 leading-tight">
+          Discover your developmental edge
+        </h1>
+        <p className="text-lg text-gray-500 max-w-2xl mx-auto mb-8">
+          The SAAQ assessment provides a comprehensive, strengths-forward developmental snapshot
+          to help you grow as a leader and a person. Receive a personalized 12-section diagnostic
+          report with actionable insights and a 90-day practice plan.
+        </p>
+        <a href="#pricing" className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-blue-700 transition">
+          Choose your assessment
+        </a>
+      </section>
+
+      {/* what you get */}
+      <section className="max-w-4xl mx-auto px-6 py-12">
+        <h2 className="text-2xl font-bold text-gray-800 text-center mb-8">What's in your report</h2>
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            { title: 'Developmental Stage', desc: 'Your center of gravity, leading edge, and stress patterns on the S1-S10 continuum.' },
+            { title: 'Power Center Analysis', desc: '8 dimensions assessed: Physical, Emotional, Relational, Social, Financial, Creative, Intellectual, Spiritual.' },
+            { title: 'Shadow Indicators', desc: 'Your recurring stress loops identified with specific antidotes and practices.' },
+            { title: 'Core Aptitudes', desc: '7 leadership capacities assessed: Agency through Restraint.' },
+            { title: '90-Day Practice Plan', desc: 'Weekly cadence, daily minimums, if-then protocols, and measurable milestones.' },
+            { title: 'Therapist Handoff', desc: 'A clinical summary your therapist or coach can use to focus sessions immediately.' },
+          ].map(item => (
+            <div key={item.title} className="bg-white rounded-xl border p-5">
+              <h3 className="font-semibold text-gray-800 mb-2">{item.title}</h3>
+              <p className="text-sm text-gray-500">{item.desc}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* pricing */}
+      <section id="pricing" className="max-w-5xl mx-auto px-6 py-16">
+        <h2 className="text-2xl font-bold text-gray-800 text-center mb-3">Choose your path</h2>
+        <p className="text-gray-500 text-center mb-10">Select the assessment and service level that fits your needs.</p>
+
+        <div className="grid md:grid-cols-2 gap-8">
+          {/* 15Q */}
+          <div className="bg-white rounded-2xl border p-8">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">15-Question Assessment</h3>
+            <p className="text-sm text-gray-500 mb-6">A focused snapshot of your developmental patterns.</p>
+            <div className="space-y-4 mb-8">
+              <PricingOption
+                label={prices?.['15q_report']?.label || '15-Question Report Only'}
+                price={prices?.['15q_report']?.amount || 400}
+                loading={loadingCheckout === '15q_report'}
+                onClick={() => handleCheckout('15q_report')}
+              />
+              <PricingOption
+                label={prices?.['15q_bundle']?.label || '15-Question Report + Sessions'}
+                price={prices?.['15q_bundle']?.amount || 1000}
+                featured
+                loading={loadingCheckout === '15q_bundle'}
+                onClick={() => handleCheckout('15q_bundle')}
+              />
+            </div>
           </div>
 
-          <p className="text-sa-300 uppercase tracking-widest text-xs font-semibold mb-3">
-            Dr. Mark Pirtle
-          </p>
-
-          <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-            Awareness Quotient
-          </h1>
-          <p className="text-sa-200 text-lg md:text-xl leading-relaxed mb-4">
-            A whole-person snapshot of how you relate to yourself, others, and the world — right now.
-          </p>
-          <p className="text-sa-300 text-base leading-relaxed mb-10 max-w-lg mx-auto">
-            This reflective assessment takes 15–45 minutes depending on the version you choose. 
-            There are no right or wrong answers. Your honest, thoughtful responses will generate 
-            a personalized developmental report with practical insights and a 90-day growth plan.
-          </p>
-
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/assessment/15Q"
-              className="inline-flex items-center justify-center px-8 py-4 bg-white text-sa-700 font-semibold rounded-xl hover:bg-sa-50 transition shadow-lg hover:shadow-xl text-lg"
-            >
-              15-Question Assessment
-              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
-            <Link
-              to="/assessment/30Q"
-              className="inline-flex items-center justify-center px-8 py-4 bg-sa-500 text-white font-semibold rounded-xl hover:bg-sa-400 transition shadow-lg hover:shadow-xl text-lg border border-sa-400"
-            >
-              30-Question Deep Dive
-              <svg className="ml-2 w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
-            </Link>
+          {/* 30Q */}
+          <div className="bg-white rounded-2xl border-2 border-blue-200 p-8 relative">
+            <span className="absolute -top-3 left-6 bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full">Recommended</span>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">30-Question Deep Dive</h3>
+            <p className="text-sm text-gray-500 mb-6">The most comprehensive developmental assessment available.</p>
+            <div className="space-y-4 mb-8">
+              <PricingOption
+                label={prices?.['30q_report']?.label || '30-Question Report Only'}
+                price={prices?.['30q_report']?.amount || 400}
+                loading={loadingCheckout === '30q_report'}
+                onClick={() => handleCheckout('30q_report')}
+              />
+              <PricingOption
+                label={prices?.['30q_bundle']?.label || '30-Question Report + Sessions'}
+                price={prices?.['30q_bundle']?.amount || 1000}
+                featured
+                loading={loadingCheckout === '30q_bundle'}
+                onClick={() => handleCheckout('30q_bundle')}
+              />
+            </div>
           </div>
+        </div>
 
-          <div className="flex justify-center gap-8 mt-6 text-sa-400 text-sm">
-            <span>15Q — ~15 min</span>
-            <span>30Q — ~30–45 min</span>
-          </div>
-
-          <p className="text-sa-400 text-xs mt-8">
-            Your responses are confidential and used only to generate your personal report.
+        {/* voice tip */}
+        <div className="mt-10 bg-blue-50 border border-blue-200 rounded-xl p-6 max-w-2xl mx-auto">
+          <p className="text-sm font-medium text-blue-800 mb-2">Tip: You can speak your answers</p>
+          <p className="text-xs text-blue-700">
+            iPhone/iPad: tap the mic icon on your keyboard. Mac: press Fn twice. Windows: press Win+H. Android: tap the mic icon.
           </p>
         </div>
-      </main>
+      </section>
 
-      {/* Footer */}
-      <footer className="px-6 py-6 text-center text-sa-400 text-sm">
-        <div className="flex items-center justify-center gap-2">
-          <Logo size={20} />
-          <span>© 2026 SkillfullyAware · Dr. Mark Pirtle</span>
-        </div>
+      {/* footer */}
+      <footer className="border-t py-8 text-center text-sm text-gray-400">
+        <p>&copy; {new Date().getFullYear()} SkillfullyAware. All rights reserved.</p>
       </footer>
+    </div>
+  )
+}
+
+function PricingOption({ label, price, featured, loading, onClick }) {
+  return (
+    <div className={`flex items-center justify-between p-4 rounded-xl border ${featured ? 'border-blue-200 bg-blue-50' : 'border-gray-200'}`}>
+      <div>
+        <p className={`font-medium ${featured ? 'text-blue-800' : 'text-gray-800'}`}>{label}</p>
+        <p className={`text-2xl font-bold ${featured ? 'text-blue-600' : 'text-gray-800'}`}>${price}</p>
+      </div>
+      <button
+        onClick={onClick} disabled={loading}
+        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition ${
+          featured
+            ? 'bg-blue-600 text-white hover:bg-blue-700'
+            : 'bg-gray-800 text-white hover:bg-gray-900'
+        } disabled:opacity-50`}
+      >
+        {loading ? 'Loading...' : 'Select'}
+      </button>
     </div>
   )
 }
