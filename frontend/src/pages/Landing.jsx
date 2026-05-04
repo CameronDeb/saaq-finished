@@ -75,7 +75,7 @@ export default function Landing() {
           <a href="#pricing" className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-blue-700 transition">
             Choose Your SAAQ Path
           </a>
-          <a href="mailto:mark@skillfullyaware.com?subject=SAAQ%20Conversation"
+          <a href="https://www.drmarkpirtle.com/"
             className="border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-medium hover:border-gray-400 transition">
             Schedule a Conversation with Mark
           </a>
@@ -150,7 +150,7 @@ export default function Landing() {
           Each participant completes the assessment, receives a personalized report, and comes prepared for a
           deeper conversation about leadership, stress patterns, communication, trust, and next-stage growth.
         </p>
-        <a href="mailto:mark@skillfullyaware.com?subject=SAAQ%20Retreat%20Inquiry"
+        <a href="https://www.drmarkpirtle.com/"
           className="bg-gray-800 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-900 transition inline-block">
           Explore a SAAQ Retreat
         </a>
@@ -224,7 +224,7 @@ export default function Landing() {
             </p>
             <p className="text-3xl font-bold text-gray-800 mb-6">Custom</p>
             <a
-              href="mailto:mark@skillfullyaware.com?subject=SAAQ%20Team%20Retreat%20Inquiry"
+              href="https://www.drmarkpirtle.com/"
               className="w-full bg-gray-800 text-white py-3 rounded-lg font-medium hover:bg-gray-900 transition text-center block"
             >
               Schedule a Conversation
@@ -263,7 +263,7 @@ export default function Landing() {
             <a href="#pricing" className="bg-white text-gray-800 px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 transition">
               Choose My SAAQ Path
             </a>
-            <a href="mailto:mark@skillfullyaware.com?subject=SAAQ%20Conversation"
+            <a href="https://www.drmarkpirtle.com/"
               className="border-2 border-white text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-white hover:text-gray-800 transition">
               Schedule a Conversation
             </a>
