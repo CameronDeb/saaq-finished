@@ -239,6 +239,28 @@ export default function Dashboard() {
         {tab === 'users' && (
           <div className="space-y-6">
             <div className="bg-white rounded-xl border p-4">
+              <h3 className="font-semibold text-gray-800 mb-3">Grant free report</h3>
+              <p className="text-sm text-gray-500 mb-3">Give someone free access to take an assessment without paying. Enter the email they'll sign up with.</p>
+              <div className="flex gap-2">
+                <input id="grantFreeEmail" placeholder="user@example.com" className="flex-1 border rounded-lg px-3 py-2 text-sm" />
+                <select id="grantFreeType" className="border rounded-lg px-3 py-2 text-sm">
+                  <option value="30q_report">30Q Report</option>
+                  <option value="30q_bundle">30Q Report + Sessions</option>
+                  <option value="15q_report">15Q Report</option>
+                </select>
+                <button onClick={async () => {
+                  const email = document.getElementById('grantFreeEmail').value
+                  const type = document.getElementById('grantFreeType').value
+                  if (!email) return
+                  try {
+                    await api.grantFreeReport(email, type)
+                    alert(`Free report granted to ${email}`)
+                    document.getElementById('grantFreeEmail').value = ''
+                  } catch (err) { alert(err.message) }
+                }} className="bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700">Grant</button>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl border p-4">
               <h3 className="font-semibold text-gray-800 mb-3">Grant admin access</h3>
               <div className="flex gap-2">
                 <input value={grantEmail} onChange={e => setGrantEmail(e.target.value)}

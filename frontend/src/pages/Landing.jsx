@@ -10,24 +10,35 @@ export default function Landing() {
   const [prices, setPrices] = useState(null)
   const [loadingCheckout, setLoadingCheckout] = useState(null)
 
+  const [grant, setGrant] = useState(null)
+
   useEffect(() => {
     api.getPricing().then(res => setPrices(res.prices)).catch(() => {})
-  }, [])
+    if (isAuthenticated) {
+      api.checkGrant().then(res => { if (res.has_grant) setGrant(res) }).catch(() => {})
+    }
+  }, [isAuthenticated])
 
   const handleCheckout = async (productType) => {
     if (!isAuthenticated) {
       navigate('/signup', { state: { from: '/' } })
       return
     }
+    // check if user has a free grant
+    if (grant?.has_grant) {
+      try {
+        await api.redeemGrant(grant.grant_id)
+        const version = grant.product_type?.startsWith('30q') ? '30Q' : '15Q'
+        navigate(`/assessment/${version}`)
+        return
+      } catch {}
+    }
     setLoadingCheckout(productType)
     try {
       const result = await api.createCheckout(productType)
       window.location.href = result.checkout_url
-    } catch (err) {
-      alert(err.message)
-    } finally {
-      setLoadingCheckout(null)
-    }
+    } catch (err) { alert(err.message) }
+    finally { setLoadingCheckout(null) }
   }
 
   return (

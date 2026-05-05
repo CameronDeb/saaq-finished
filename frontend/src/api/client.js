@@ -39,6 +39,11 @@ export const api = {
   login: (data) => request('/auth/login', { method: 'POST', body: JSON.stringify(data) }),
   getMe: () => request('/auth/me'),
 
+  // grants
+  grantFreeReport: (email, productType) => request('/admin/grant-free', { method: 'POST', body: JSON.stringify({ email, product_type: productType }) }),
+  checkGrant: () => request('/check-grant'),
+  redeemGrant: (grantId) => request('/redeem-grant', { method: 'POST', body: JSON.stringify({ grant_id: grantId }) }),
+
   // pricing (public)
   getPricing: () => request('/pricing'),
 

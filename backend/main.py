@@ -502,6 +502,40 @@ async def admin_dashboard_stats(user=Depends(require_admin)):
         "total_users": num_users,
     }
 
+@app.post("/api/v1/admin/grant-free")
+async def grant_free_report(request: Request, user=Depends(require_admin)):
+    body = await request.json()
+    email = body.get("email", "").strip().lower()
+    product_type = body.get("product_type", "30q_report")
+    if not email:
+        raise HTTPException(400, "Email required")
+    sb = get_supabase()
+    if not sb:
+        raise HTTPException(503, "Database not configured")
+    sb.table("grants").insert({"email": email, "product_type": product_type, "granted_by": user["id"]}).execute()
+    return {"message": f"Free report granted to {email}"}
+
+
+@app.get("/api/v1/check-grant")
+async def check_grant(user=Depends(require_auth)):
+    sb = get_supabase()
+    if not sb:
+        return {"has_grant": False}
+    result = sb.table("grants").select("*").eq("email", user["email"].lower()).eq("used", False).execute()
+    if result.data:
+        return {"has_grant": True, "grant_id": result.data[0]["id"], "product_type": result.data[0]["product_type"]}
+    return {"has_grant": False}
+
+
+@app.post("/api/v1/redeem-grant")
+async def redeem_grant(request: Request, user=Depends(require_auth)):
+    body = await request.json()
+    grant_id = body.get("grant_id")
+    sb = get_supabase()
+    if not sb:
+        raise HTTPException(503, "Database not configured")
+    sb.table("grants").update({"used": True}).eq("id", grant_id).eq("email", user["email"].lower()).execute()
+    return {"message": "Grant redeemed"}
 
 # ─── Legacy dashboard (no auth) ──────────────────────────────
 @app.get("/api/v1/dashboard", response_model=DashboardStats)
