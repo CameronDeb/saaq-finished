@@ -185,62 +185,63 @@ export default function Landing() {
       </section>
 
       {/* pricing */}
-      <section id="pricing" className="max-w-4xl mx-auto px-6 py-16">
+      <section id="pricing" className="max-w-5xl mx-auto px-6 py-16">
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-3">Choose Your Path</h2>
         <p className="text-gray-500 text-center mb-10">Select the option that fits where you are right now.</p>
 
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Report Only */}
-          <div className="bg-white rounded-2xl border p-8 flex flex-col">
-            <h3 className="text-lg font-bold text-gray-800 mb-2">SAAQ Report Only</h3>
-            <p className="text-sm text-gray-500 mb-4 flex-1">
-              The full personalized report and 90-day practice plan.
-            </p>
-            <p className="text-3xl font-bold text-gray-800 mb-6">
-              ${prices?.['30q_report']?.amount || 500}
-            </p>
-            <button
-              onClick={() => handleCheckout('30q_report')}
-              disabled={loadingCheckout === '30q_report'}
-              className="w-full bg-gray-800 text-white py-3 rounded-lg font-medium hover:bg-gray-900 disabled:opacity-50 transition"
-            >
-              {loadingCheckout === '30q_report' ? 'Loading...' : 'Select'}
-            </button>
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          {/* 15Q */}
+          <div className="bg-white rounded-2xl border p-8">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">15-Question Assessment</h3>
+            <p className="text-sm text-gray-500 mb-6">A focused snapshot of your developmental patterns.</p>
+            <div className="space-y-4">
+              <PricingOption
+                label={prices?.['15q_report']?.label || 'Report Only'}
+                price={prices?.['15q_report']?.amount || 400}
+                loading={loadingCheckout === '15q_report'}
+                onClick={() => handleCheckout('15q_report')}
+              />
+              <PricingOption
+                label={prices?.['15q_bundle']?.label || 'Report + Debrief Sessions'}
+                price={prices?.['15q_bundle']?.amount || 1000}
+                featured
+                loading={loadingCheckout === '15q_bundle'}
+                onClick={() => handleCheckout('15q_bundle')}
+              />
+            </div>
           </div>
 
-          {/* Report + Sessions */}
-          <div className="bg-white rounded-2xl border-2 border-blue-200 p-8 flex flex-col relative">
-            <span className="absolute -top-3 left-6 bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full">Most Popular</span>
-            <h3 className="text-lg font-bold text-gray-800 mb-2">SAAQ Report + Debrief</h3>
-            <p className="text-sm text-gray-500 mb-4 flex-1">
-              The full report plus two private sessions with Mark to interpret findings and identify next steps.
-            </p>
-            <p className="text-3xl font-bold text-blue-600 mb-6">
-              ${prices?.['30q_bundle']?.amount || 1000}
-            </p>
-            <button
-              onClick={() => handleCheckout('30q_bundle')}
-              disabled={loadingCheckout === '30q_bundle'}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 disabled:opacity-50 transition"
-            >
-              {loadingCheckout === '30q_bundle' ? 'Loading...' : 'Select'}
-            </button>
+          {/* 30Q */}
+          <div className="bg-white rounded-2xl border-2 border-blue-200 p-8 relative">
+            <span className="absolute -top-3 left-6 bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full">Recommended</span>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">30-Question Deep Dive</h3>
+            <p className="text-sm text-gray-500 mb-6">The most comprehensive developmental assessment available.</p>
+            <div className="space-y-4">
+              <PricingOption
+                label={prices?.['30q_report']?.label || 'Report Only'}
+                price={prices?.['30q_report']?.amount || 500}
+                loading={loadingCheckout === '30q_report'}
+                onClick={() => handleCheckout('30q_report')}
+              />
+              <PricingOption
+                label={prices?.['30q_bundle']?.label || 'Report + Debrief Sessions'}
+                price={prices?.['30q_bundle']?.amount || 1000}
+                featured
+                loading={loadingCheckout === '30q_bundle'}
+                onClick={() => handleCheckout('30q_bundle')}
+              />
+            </div>
           </div>
+        </div>
 
-          {/* Forum/Team */}
-          <div className="bg-white rounded-2xl border p-8 flex flex-col">
-            <h3 className="text-lg font-bold text-gray-800 mb-2">Forum or Team Retreat</h3>
-            <p className="text-sm text-gray-500 mb-4 flex-1">
-              For forums, leadership teams, and groups that want the SAAQ as part of a facilitated retreat or offsite.
-            </p>
-            <p className="text-3xl font-bold text-gray-800 mb-6">Custom</p>
-            <a
-              href="https://www.drmarkpirtle.com/"
-              className="w-full bg-gray-800 text-white py-3 rounded-lg font-medium hover:bg-gray-900 transition text-center block"
-            >
-              Schedule a Conversation
-            </a>
-          </div>
+        {/* Forum option */}
+        <div className="bg-white rounded-2xl border p-8 text-center max-w-lg mx-auto">
+          <h3 className="text-lg font-bold text-gray-800 mb-2">Forum or Team Retreat</h3>
+          <p className="text-sm text-gray-500 mb-4">Bring the SAAQ to your forum, leadership team, or offsite as a facilitated experience.</p>
+          <a href="https://www.drmarkpirtle.com/" target="_blank" rel="noopener noreferrer"
+            className="bg-gray-800 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-900 transition inline-block">
+            Schedule a Conversation
+          </a>
         </div>
       </section>
 
