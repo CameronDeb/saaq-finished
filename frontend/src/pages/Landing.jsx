@@ -290,3 +290,24 @@ export default function Landing() {
     </div>
   )
 }
+
+function PricingOption({ label, price, featured, loading, onClick }) {
+  return (
+    <div className={`flex items-center justify-between p-4 rounded-xl border ${featured ? 'border-blue-200 bg-blue-50' : 'border-gray-200'}`}>
+      <div>
+        <p className={`font-medium ${featured ? 'text-blue-800' : 'text-gray-800'}`}>{label}</p>
+        <p className={`text-2xl font-bold ${featured ? 'text-blue-600' : 'text-gray-800'}`}>${price}</p>
+      </div>
+      <button
+        onClick={onClick} disabled={loading}
+        className={`px-5 py-2.5 rounded-lg text-sm font-medium transition ${
+          featured
+            ? 'bg-blue-600 text-white hover:bg-blue-700'
+            : 'bg-gray-800 text-white hover:bg-gray-900'
+        } disabled:opacity-50`}
+      >
+        {loading ? 'Loading...' : 'Select'}
+      </button>
+    </div>
+  )
+}
