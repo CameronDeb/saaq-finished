@@ -219,8 +219,10 @@ export default function Dashboard() {
                           <td className="px-4 py-3">
                             {status === 'complete' ? (
                               <button onClick={() => handleDownload(intake.id, intake.first_name)} className="text-blue-600 hover:underline text-sm">Download</button>
-                            ) : status === 'failed' || status === 'pending' ? (
-                              <button onClick={() => handleGenerate(intake.id)} className="text-blue-600 hover:underline text-sm">Generate</button>
+                            ) : status === 'failed' || status === 'pending' || status === 'complete' ? (
+                              <button onClick={() => handleGenerate(intake.id)} className="text-blue-600 hover:underline text-sm">
+                                {status === 'complete' ? 'Regenerate' : 'Generate'}
+                              </button>
                             ) : (
                               <span className="text-gray-400 text-sm">Processing...</span>
                             )}
