@@ -10,9 +10,11 @@ export default function MyDashboard() {
   const [reports, setReports] = useState([])
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
-    loadData()
-  }, [])
+  // Check for in-progress assessments
+  const saved15 = (() => { try { const s = localStorage.getItem('saaq_progress_15Q'); return s && JSON.parse(s)?.step >= 0 } catch { return false } })()
+  const saved30 = (() => { try { const s = localStorage.getItem('saaq_progress_30Q'); return s && JSON.parse(s)?.step >= 0 } catch { return false } })()
+
+  useEffect(() => { loadData() }, [])
 
   const loadData = async () => {
     try {
@@ -49,9 +51,10 @@ export default function MyDashboard() {
           <div className="flex items-center gap-3">
             <Link to="/"><Logo size={36} /></Link>
             <span className="text-lg font-semibold text-gray-800">My Account</span>
+            <Link to="/" className="text-sm text-gray-400 hover:text-gray-600 ml-2">Home</Link>
           </div>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500">{user?.email}</span>
+            <span className="text-sm text-gray-500 hidden md:inline">{user?.email}</span>
             {user?.role === 'admin' && (
               <Link to="/dashboard" className="text-sm text-blue-600 hover:underline">Admin</Link>
             )}
@@ -62,29 +65,33 @@ export default function MyDashboard() {
 
       <main className="max-w-4xl mx-auto px-6 py-8">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome, {user?.full_name || user?.email}</h1>
-        <p className="text-gray-500 mb-8">View your assessments and download reports.</p>
-        {/* Continue assessment if in progress */}
-        {(() => {
-          const saved15 = localStorage.getItem('saaq_progress_15Q')
-          const saved30 = localStorage.getItem('saaq_progress_30Q')
-          const has15 = saved15 && JSON.parse(saved15)?.step >= 0
-          const has30 = saved30 && JSON.parse(saved30)?.step >= 0
-          if (!has15 && !has30) return null
-          return (
-            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
-              <p className="font-medium text-yellow-800 mb-2">You have an assessment in progress</p>
-              <div className="flex gap-3">
-                {has15 && <Link to="/assessment/15Q" className="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700">Continue 15Q Assessment</Link>}
-                {has30 && <Link to="/assessment/30Q" className="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700">Continue 30Q Assessment</Link>}
-              </div>
+        <p className="text-gray-500 mb-6">View your assessments and download reports.</p>
+
+        {/* Continue in-progress assessment */}
+        {(saved15 || saved30) && (
+          <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-5 mb-6">
+            <p className="font-medium text-yellow-800 mb-3">You have an assessment in progress</p>
+            <p className="text-sm text-yellow-700 mb-3">Your answers are saved. Pick up right where you left off.</p>
+            <div className="flex gap-3">
+              {saved15 && (
+                <Link to="/assessment/15Q" className="bg-yellow-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-yellow-700 transition">
+                  Continue 15Q Assessment
+                </Link>
+              )}
+              {saved30 && (
+                <Link to="/assessment/30Q" className="bg-yellow-600 text-white px-5 py-2.5 rounded-lg text-sm font-medium hover:bg-yellow-700 transition">
+                  Continue 30Q Assessment
+                </Link>
+              )}
             </div>
-          )
-        })()}
+          </div>
+        )}
+
         {loading ? (
-          <p className="text-gray-400">Loading...</p>
+          <p className="text-gray-400">Loading your reports...</p>
         ) : intakes.length === 0 ? (
           <div className="bg-white rounded-xl border p-8 text-center">
-            <p className="text-gray-500 mb-4">You haven't taken any assessments yet.</p>
+            <p className="text-gray-500 mb-4">You haven't completed any assessments yet.</p>
             <Link to="/" className="bg-blue-600 text-white px-6 py-2.5 rounded-lg font-medium hover:bg-blue-700 transition">
               Take an assessment
             </Link>
@@ -104,14 +111,12 @@ export default function MyDashboard() {
                       status === 'failed' ? 'bg-red-100 text-red-700' :
                       'bg-yellow-100 text-yellow-700'
                     }`}>
-                      {status}
+                      {status === 'complete' ? 'Report Ready' : status === 'failed' ? 'Failed' : 'Processing'}
                     </span>
                   </div>
                   {status === 'complete' && (
-                    <button
-                      onClick={() => handleDownload(intake.id, intake.first_name)}
-                      className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition"
-                    >
+                    <button onClick={() => handleDownload(intake.id, intake.first_name)}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-blue-700 transition">
                       Download Report
                     </button>
                   )}

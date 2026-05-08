@@ -9,7 +9,6 @@ export default function Landing() {
   const navigate = useNavigate()
   const [prices, setPrices] = useState(null)
   const [loadingCheckout, setLoadingCheckout] = useState(null)
-
   const [grant, setGrant] = useState(null)
 
   useEffect(() => {
@@ -24,11 +23,10 @@ export default function Landing() {
       navigate('/signup', { state: { from: '/' } })
       return
     }
-    // check for free grant first
     if (grant?.has_grant) {
       try {
         await api.redeemGrant(grant.grant_id)
-        const version = productType.startsWith('30q') ? '30Q' : productType.startsWith('15q') ? '15Q' : '30Q'
+        const version = productType.startsWith('30q') ? '30Q' : '15Q'
         navigate(`/assessment/${version}`)
         return
       } catch {}
@@ -46,7 +44,6 @@ export default function Landing() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      {/* nav */}
       <nav className="bg-white border-b">
         <div className="max-w-5xl mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -65,16 +62,19 @@ export default function Landing() {
             ) : (
               <>
                 <Link to="/login" className="text-gray-600 hover:text-gray-800">Sign in</Link>
-                <Link to="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition">
-                  Get started
-                </Link>
+                <Link to="/signup" className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 transition">Get started</Link>
               </>
             )}
           </div>
         </div>
       </nav>
 
-      {/* hero */}
+      {grant?.has_grant && (
+        <div className="bg-green-50 border-b border-green-200 px-6 py-3 text-center">
+          <p className="text-green-700 text-sm font-medium">You have a free assessment available! Click any option below to start.</p>
+        </div>
+      )}
+
       <section className="max-w-3xl mx-auto px-6 pt-16 pb-12 text-center">
         <h1 className="text-3xl md:text-5xl font-bold text-gray-800 mb-6 leading-tight">
           See the Patterns That Shape How You Lead, Relate, and Grow
@@ -89,14 +89,13 @@ export default function Landing() {
           <a href="#pricing" className="bg-blue-600 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-blue-700 transition">
             Choose Your SAAQ Path
           </a>
-          <a href="https://www.drmarkpirtle.com/"
+          <a href="https://www.drmarkpirtle.com/" target="_blank" rel="noopener noreferrer"
             className="border-2 border-gray-300 text-gray-700 px-8 py-3 rounded-lg text-lg font-medium hover:border-gray-400 transition">
             Schedule a Conversation with Mark
           </a>
         </div>
       </section>
 
-      {/* credibility band */}
       <section className="bg-white border-y">
         <div className="max-w-3xl mx-auto px-6 py-10 text-center">
           <p className="text-xs uppercase tracking-widest text-gray-400 mb-3">Created by</p>
@@ -109,12 +108,10 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* what the SAAQ helps you see */}
       <section className="max-w-4xl mx-auto px-6 py-16">
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-3">What the SAAQ helps you see</h2>
         <p className="text-gray-500 text-center max-w-2xl mx-auto mb-10">
-          Your personalized report provides a comprehensive developmental snapshot across six dimensions,
-          giving you clarity on where you are, where you're growing, and what to do next.
+          Your personalized report provides a comprehensive developmental snapshot across six dimensions.
         </p>
         <div className="grid md:grid-cols-3 gap-6">
           {[
@@ -133,7 +130,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* how it works */}
       <section id="how-it-works" className="bg-white border-y">
         <div className="max-w-4xl mx-auto px-6 py-16">
           <h2 className="text-2xl font-bold text-gray-800 text-center mb-10">How It Works</h2>
@@ -145,9 +141,7 @@ export default function Landing() {
               { step: '4', title: 'Optional debrief or retreat', desc: 'Work with Mark individually, with your forum, or with your leadership team.' },
             ].map(item => (
               <div key={item.step} className="text-center">
-                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
-                  {item.step}
-                </div>
+                <div className="w-12 h-12 bg-blue-600 text-white rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">{item.step}</div>
                 <h3 className="font-semibold text-gray-800 mb-2">{item.title}</h3>
                 <p className="text-sm text-gray-500">{item.desc}</p>
               </div>
@@ -156,7 +150,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* forums and teams */}
       <section className="max-w-3xl mx-auto px-6 py-16 text-center">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">For Forums, Leadership Teams, and Growth-Oriented Groups</h2>
         <p className="text-gray-500 max-w-2xl mx-auto mb-8 leading-relaxed">
@@ -164,13 +157,12 @@ export default function Landing() {
           Each participant completes the assessment, receives a personalized report, and comes prepared for a
           deeper conversation about leadership, stress patterns, communication, trust, and next-stage growth.
         </p>
-        <a href="https://www.drmarkpirtle.com/"
+        <a href="https://www.drmarkpirtle.com/" target="_blank" rel="noopener noreferrer"
           className="bg-gray-800 text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-900 transition inline-block">
           Explore a SAAQ Retreat
         </a>
       </section>
 
-      {/* trust signals */}
       <section className="bg-white border-y">
         <div className="max-w-4xl mx-auto px-6 py-10">
           <div className="flex flex-wrap justify-center gap-x-8 gap-y-3 text-sm text-gray-500">
@@ -187,57 +179,31 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* pricing */}
       <section id="pricing" className="max-w-5xl mx-auto px-6 py-16">
         <h2 className="text-2xl font-bold text-gray-800 text-center mb-3">Choose Your Path</h2>
         <p className="text-gray-500 text-center mb-10">Select the option that fits where you are right now.</p>
 
         <div className="grid md:grid-cols-2 gap-8 mb-8">
-          {/* 15Q */}
           <div className="bg-white rounded-2xl border p-8">
             <h3 className="text-xl font-bold text-gray-800 mb-2">15-Question Assessment</h3>
             <p className="text-sm text-gray-500 mb-6">A focused snapshot of your developmental patterns.</p>
             <div className="space-y-4">
-              <PricingOption
-                label={prices?.['15q_report']?.label || 'Report Only'}
-                price={prices?.['15q_report']?.amount || 400}
-                loading={loadingCheckout === '15q_report'}
-                onClick={() => handleCheckout('15q_report')}
-              />
-              <PricingOption
-                label={prices?.['15q_bundle']?.label || 'Report + Debrief Sessions'}
-                price={prices?.['15q_bundle']?.amount || 1000}
-                featured
-                loading={loadingCheckout === '15q_bundle'}
-                onClick={() => handleCheckout('15q_bundle')}
-              />
+              <PricingOption label={prices?.['15q_report']?.label || 'Report Only'} price={prices?.['15q_report']?.amount || 400} loading={loadingCheckout === '15q_report'} onClick={() => handleCheckout('15q_report')} hasGrant={!!grant?.has_grant} />
+              <PricingOption label={prices?.['15q_bundle']?.label || 'Report + Debrief Sessions'} price={prices?.['15q_bundle']?.amount || 1000} featured loading={loadingCheckout === '15q_bundle'} onClick={() => handleCheckout('15q_bundle')} hasGrant={!!grant?.has_grant} />
             </div>
           </div>
 
-          {/* 30Q */}
           <div className="bg-white rounded-2xl border-2 border-blue-200 p-8 relative">
             <span className="absolute -top-3 left-6 bg-blue-600 text-white text-xs font-medium px-3 py-1 rounded-full">Recommended</span>
             <h3 className="text-xl font-bold text-gray-800 mb-2">30-Question Deep Dive</h3>
             <p className="text-sm text-gray-500 mb-6">The most comprehensive developmental assessment available.</p>
             <div className="space-y-4">
-              <PricingOption
-                label={prices?.['30q_report']?.label || 'Report Only'}
-                price={prices?.['30q_report']?.amount || 500}
-                loading={loadingCheckout === '30q_report'}
-                onClick={() => handleCheckout('30q_report')}
-              />
-              <PricingOption
-                label={prices?.['30q_bundle']?.label || 'Report + Debrief Sessions'}
-                price={prices?.['30q_bundle']?.amount || 1000}
-                featured
-                loading={loadingCheckout === '30q_bundle'}
-                onClick={() => handleCheckout('30q_bundle')}
-              />
+              <PricingOption label={prices?.['30q_report']?.label || 'Report Only'} price={prices?.['30q_report']?.amount || 500} loading={loadingCheckout === '30q_report'} onClick={() => handleCheckout('30q_report')} hasGrant={!!grant?.has_grant} />
+              <PricingOption label={prices?.['30q_bundle']?.label || 'Report + Debrief Sessions'} price={prices?.['30q_bundle']?.amount || 1000} featured loading={loadingCheckout === '30q_bundle'} onClick={() => handleCheckout('30q_bundle')} hasGrant={!!grant?.has_grant} />
             </div>
           </div>
         </div>
 
-        {/* Forum option */}
         <div className="bg-white rounded-2xl border p-8 text-center max-w-lg mx-auto">
           <h3 className="text-lg font-bold text-gray-800 mb-2">Forum or Team Retreat</h3>
           <p className="text-sm text-gray-500 mb-4">Bring the SAAQ to your forum, leadership team, or offsite as a facilitated experience.</p>
@@ -248,15 +214,10 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* voice tip - small and subtle */}
       <section className="max-w-2xl mx-auto px-6 pb-8">
         <details className="bg-blue-50 border border-blue-200 rounded-xl p-4 cursor-pointer">
-          <summary className="text-sm font-medium text-blue-800">
-            Prefer to speak your answers?
-          </summary>
-          <p className="text-xs text-blue-700 mt-3 leading-relaxed">
-            You can use voice dictation on most devices. This often helps people answer more naturally and completely.
-          </p>
+          <summary className="text-sm font-medium text-blue-800">Prefer to speak your answers?</summary>
+          <p className="text-xs text-blue-700 mt-3 leading-relaxed">You can use voice dictation on most devices.</p>
           <ul className="text-xs text-blue-600 mt-2 space-y-1">
             <li>iPhone / iPad: tap the microphone icon on your keyboard</li>
             <li>Mac: press the Fn key twice</li>
@@ -266,7 +227,6 @@ export default function Landing() {
         </details>
       </section>
 
-      {/* final CTA */}
       <section className="bg-gray-800 text-white">
         <div className="max-w-3xl mx-auto px-6 py-16 text-center">
           <h2 className="text-2xl font-bold mb-4">Ready to see yourself more clearly?</h2>
@@ -275,10 +235,8 @@ export default function Landing() {
             the SAAQ to your forum, team, or retreat.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <a href="#pricing" className="bg-white text-gray-800 px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 transition">
-              Choose My SAAQ Path
-            </a>
-            <a href="https://www.drmarkpirtle.com/"
+            <a href="#pricing" className="bg-white text-gray-800 px-8 py-3 rounded-lg text-lg font-medium hover:bg-gray-100 transition">Choose My SAAQ Path</a>
+            <a href="https://www.drmarkpirtle.com/" target="_blank" rel="noopener noreferrer"
               className="border-2 border-white text-white px-8 py-3 rounded-lg text-lg font-medium hover:bg-white hover:text-gray-800 transition">
               Schedule a Conversation
             </a>
@@ -286,7 +244,6 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* footer */}
       <footer className="border-t py-8 text-center text-sm text-gray-400">
         <p>&copy; {new Date().getFullYear()} SkillfullyAware. All rights reserved.</p>
       </footer>
@@ -294,22 +251,24 @@ export default function Landing() {
   )
 }
 
-function PricingOption({ label, price, featured, loading, onClick }) {
+function PricingOption({ label, price, featured, loading, onClick, hasGrant }) {
   return (
     <div className={`flex items-center justify-between p-4 rounded-xl border ${featured ? 'border-blue-200 bg-blue-50' : 'border-gray-200'}`}>
       <div>
         <p className={`font-medium ${featured ? 'text-blue-800' : 'text-gray-800'}`}>{label}</p>
-        <p className={`text-2xl font-bold ${featured ? 'text-blue-600' : 'text-gray-800'}`}>${price}</p>
+        {hasGrant ? (
+          <p className="text-2xl font-bold text-green-600">Free</p>
+        ) : (
+          <p className={`text-2xl font-bold ${featured ? 'text-blue-600' : 'text-gray-800'}`}>${price}</p>
+        )}
       </div>
-      <button
-        onClick={onClick} disabled={loading}
+      <button onClick={onClick} disabled={loading}
         className={`px-5 py-2.5 rounded-lg text-sm font-medium transition ${
-          featured
-            ? 'bg-blue-600 text-white hover:bg-blue-700'
-            : 'bg-gray-800 text-white hover:bg-gray-900'
-        } disabled:opacity-50`}
-      >
-        {loading ? 'Loading...' : 'Select'}
+          hasGrant ? 'bg-green-600 text-white hover:bg-green-700' :
+          featured ? 'bg-blue-600 text-white hover:bg-blue-700' :
+          'bg-gray-800 text-white hover:bg-gray-900'
+        } disabled:opacity-50`}>
+        {loading ? 'Loading...' : hasGrant ? 'Start Free' : 'Select'}
       </button>
     </div>
   )
