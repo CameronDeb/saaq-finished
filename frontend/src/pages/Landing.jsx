@@ -24,11 +24,11 @@ export default function Landing() {
       navigate('/signup', { state: { from: '/' } })
       return
     }
-    // check if user has a free grant
+    // check for free grant first
     if (grant?.has_grant) {
       try {
         await api.redeemGrant(grant.grant_id)
-        const version = grant.product_type?.startsWith('30q') ? '30Q' : '15Q'
+        const version = productType.startsWith('30q') ? '30Q' : productType.startsWith('15q') ? '15Q' : '30Q'
         navigate(`/assessment/${version}`)
         return
       } catch {}
@@ -37,8 +37,11 @@ export default function Landing() {
     try {
       const result = await api.createCheckout(productType)
       window.location.href = result.checkout_url
-    } catch (err) { alert(err.message) }
-    finally { setLoadingCheckout(null) }
+    } catch (err) {
+      alert(err.message)
+    } finally {
+      setLoadingCheckout(null)
+    }
   }
 
   return (

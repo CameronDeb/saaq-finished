@@ -63,7 +63,23 @@ export default function MyDashboard() {
       <main className="max-w-4xl mx-auto px-6 py-8">
         <h1 className="text-2xl font-bold text-gray-800 mb-2">Welcome, {user?.full_name || user?.email}</h1>
         <p className="text-gray-500 mb-8">View your assessments and download reports.</p>
-
+        {/* Continue assessment if in progress */}
+        {(() => {
+          const saved15 = localStorage.getItem('saaq_progress_15Q')
+          const saved30 = localStorage.getItem('saaq_progress_30Q')
+          const has15 = saved15 && JSON.parse(saved15)?.step >= 0
+          const has30 = saved30 && JSON.parse(saved30)?.step >= 0
+          if (!has15 && !has30) return null
+          return (
+            <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-4 mb-6">
+              <p className="font-medium text-yellow-800 mb-2">You have an assessment in progress</p>
+              <div className="flex gap-3">
+                {has15 && <Link to="/assessment/15Q" className="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700">Continue 15Q Assessment</Link>}
+                {has30 && <Link to="/assessment/30Q" className="bg-yellow-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-yellow-700">Continue 30Q Assessment</Link>}
+              </div>
+            </div>
+          )
+        })()}
         {loading ? (
           <p className="text-gray-400">Loading...</p>
         ) : intakes.length === 0 ? (

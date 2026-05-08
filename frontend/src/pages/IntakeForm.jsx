@@ -152,6 +152,7 @@ export default function IntakeForm() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Header */}
+      <Link to="/" className="flex items-center gap-2"></Link>
       <header className="bg-white border-b border-gray-200 px-6 py-4">
         <div className="max-w-2xl mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
@@ -159,6 +160,7 @@ export default function IntakeForm() {
             <span className="font-display text-sa-700 text-lg font-semibold">SAAQ</span>
             <span className="text-xs text-gray-400 ml-1">{version}</span>
           </div>
+          <Link to="/" className="text-sm text-gray-400 hover:text-gray-600 ml-4">Home</Link>
           {step >= 0 && (
             <div className="text-sm text-gray-500">
               {step + 1} of {questions.length}

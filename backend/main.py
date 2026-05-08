@@ -1,17 +1,18 @@
 """
-SAAQ Backend API — Full MVP
-Auth, Stripe payments, admin panel, email delivery, report generation.
+SAAQ Backend API — Full MVP v3
+Supabase Storage for DOCX, grant flow fix, all endpoints.
 """
 import json
 import os
 import subprocess
+import base64
 from datetime import datetime
 from pathlib import Path
 
 from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException, BackgroundTasks, Request, Header, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, Response
 from pydantic import BaseModel
 from typing import Optional
 
@@ -25,7 +26,7 @@ from services.analyzer import analyze_responses
 
 load_dotenv()
 
-app = FastAPI(title="SAAQ API", version="2.0.0")
+app = FastAPI(title="SAAQ API", version="3.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -38,9 +39,9 @@ app.add_middleware(
 PIPELINE_DIR = Path(__file__).parent.parent / "pipeline"
 OUTPUT_DIR = Path(__file__).parent / "generated_reports"
 OUTPUT_DIR.mkdir(exist_ok=True)
+STORAGE_BUCKET = "reports"
 
 
-# ─── Supabase client ─────────────────────────────────────────
 def get_supabase():
     from supabase import create_client
     url = os.getenv("SUPABASE_URL")
@@ -84,7 +85,6 @@ async def require_admin(authorization: Optional[str] = Header(None)):
     return user
 
 
-# ─── Request models ───────────────────────────────────────────
 class SignupRequest(BaseModel):
     email: str
     password: str
@@ -255,7 +255,7 @@ async def get_pricing():
     defaults = {
         "15q_report": {"amount": 400, "label": "15-Question Report Only"},
         "15q_bundle": {"amount": 1000, "label": "15-Question Report + Sessions"},
-        "30q_report": {"amount": 400, "label": "30-Question Report Only"},
+        "30q_report": {"amount": 500, "label": "30-Question Report Only"},
         "30q_bundle": {"amount": 1000, "label": "30-Question Report + Sessions"},
     }
     if not sb:
@@ -265,6 +265,43 @@ async def get_pricing():
     for row in result.data:
         prices[row["key"].replace("price_", "")] = row["value"]
     return {"prices": {**defaults, **prices}}
+
+
+# ─── Grants ───────────────────────────────────────────────────
+@app.post("/api/v1/admin/grant-free")
+async def grant_free_report(request: Request, user=Depends(require_admin)):
+    body = await request.json()
+    email = body.get("email", "").strip().lower()
+    product_type = body.get("product_type", "30q_report")
+    if not email:
+        raise HTTPException(400, "Email required")
+    sb = get_supabase()
+    if not sb:
+        raise HTTPException(503, "Database not configured")
+    sb.table("grants").insert({"email": email, "product_type": product_type, "granted_by": user["id"]}).execute()
+    return {"message": f"Free report granted to {email}"}
+
+
+@app.get("/api/v1/check-grant")
+async def check_grant(user=Depends(require_auth)):
+    sb = get_supabase()
+    if not sb:
+        return {"has_grant": False}
+    result = sb.table("grants").select("*").eq("email", user["email"].lower()).eq("used", False).execute()
+    if result.data:
+        return {"has_grant": True, "grant_id": result.data[0]["id"], "product_type": result.data[0]["product_type"]}
+    return {"has_grant": False}
+
+
+@app.post("/api/v1/redeem-grant")
+async def redeem_grant(request: Request, user=Depends(require_auth)):
+    body = await request.json()
+    grant_id = body.get("grant_id")
+    sb = get_supabase()
+    if not sb:
+        raise HTTPException(503, "Database not configured")
+    sb.table("grants").update({"used": True}).eq("id", grant_id).eq("email", user["email"].lower()).execute()
+    return {"message": "Grant redeemed"}
 
 
 # ─── Questions ────────────────────────────────────────────────
@@ -285,7 +322,7 @@ async def submit_intake(submission: IntakeSubmission, authorization: Optional[st
         version=submission.version.value, responses=submission.responses,
         user_id=user["id"] if user else None,
     )
-    return IntakeResponse(id=record["id"], first_name=record["first_name"], version=record["version"], status=ReportStatus.PENDING, created_at=record["created_at"], message="Survey submitted successfully.")
+    return IntakeResponse(id=record["id"], first_name=record["first_name"], version=record["version"], status=ReportStatus.PENDING, created_at=record.get("created_at", record.get("submitted_at", "")), message="Survey submitted successfully.")
 
 
 @app.get("/api/v1/intakes")
@@ -304,6 +341,44 @@ async def my_intakes(user=Depends(require_auth)):
 
 
 # ─── Reports ──────────────────────────────────────────────────
+def _upload_docx_to_storage(sb, file_path: Path, storage_name: str) -> str | None:
+    """Upload DOCX to Supabase Storage and return the path."""
+    try:
+        with open(file_path, "rb") as f:
+            file_bytes = f.read()
+        sb.storage.from_(STORAGE_BUCKET).upload(
+            storage_name,
+            file_bytes,
+            {"content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
+        )
+        return storage_name
+    except Exception as e:
+        print(f"  Storage upload failed: {e}")
+        # Try to update if already exists
+        try:
+            with open(file_path, "rb") as f:
+                file_bytes = f.read()
+            sb.storage.from_(STORAGE_BUCKET).update(
+                storage_name,
+                file_bytes,
+                {"content-type": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"}
+            )
+            return storage_name
+        except Exception as e2:
+            print(f"  Storage update also failed: {e2}")
+            return None
+
+
+def _download_docx_from_storage(sb, storage_name: str) -> bytes | None:
+    """Download DOCX from Supabase Storage."""
+    try:
+        data = sb.storage.from_(STORAGE_BUCKET).download(storage_name)
+        return data
+    except Exception as e:
+        print(f"  Storage download failed: {e}")
+        return None
+
+
 async def _generate_report_task(intake_id: str):
     try:
         await db.update_intake_status(intake_id, "analyzing")
@@ -312,22 +387,45 @@ async def _generate_report_task(intake_id: str):
             return
         subject = intake["first_name"]
         responses = intake["responses"]
+
+        # step 1: AI analysis
         report_data = await analyze_responses(subject, responses)
+
+        # step 2: build DOCX
         await db.update_intake_status(intake_id, "generating")
-        docx_path = OUTPUT_DIR / f"SAAQReport-{subject}-{intake_id[:8]}.docx"
+        docx_filename = f"SAAQReport-{subject}-{intake_id[:8]}.docx"
+        docx_path = OUTPUT_DIR / docx_filename
         json_path = OUTPUT_DIR / f"_temp_{intake_id}.json"
+
         with open(json_path, "w") as f:
             json.dump(report_data, f, indent=2, ensure_ascii=False)
+
         result = subprocess.run(
             ["node", str(PIPELINE_DIR / "build_report.js"), str(json_path), str(docx_path)],
             capture_output=True, text=True, timeout=30,
         )
         json_path.unlink(missing_ok=True)
+
         if result.returncode != 0:
             raise Exception(f"DOCX build failed: {result.stderr}")
+
+        # step 3: upload to Supabase Storage
+        sb = get_supabase()
+        storage_path = None
+        if sb:
+            storage_name = f"{intake_id}/{docx_filename}"
+            storage_path = _upload_docx_to_storage(sb, docx_path, storage_name)
+
+        # step 4: save report record
         await db.save_report(intake_id, subject, report_data, "complete")
+
+        # update docx_path in report
+        if sb and storage_path:
+            sb.table("reports").update({"docx_path": storage_path}).eq("intake_id", intake_id).execute()
+
         await db.update_intake_status(intake_id, "complete")
-        # auto-email if configured
+
+        # step 5: email report
         email = intake.get("email")
         if email and os.getenv("RESEND_API_KEY"):
             try:
@@ -335,11 +433,14 @@ async def _generate_report_task(intake_id: str):
                 with open(docx_path, "rb") as f:
                     docx_bytes = f.read()
                 send_report_email(email, subject, docx_bytes, f"SAAQReport-{subject}.docx")
-                sb = get_supabase()
                 if sb:
                     sb.table("reports").update({"emailed_at": datetime.utcnow().isoformat()}).eq("intake_id", intake_id).execute()
             except Exception as e:
                 print(f"  Email failed: {e}")
+
+        # cleanup local file (it's in storage now)
+        docx_path.unlink(missing_ok=True)
+
     except Exception as e:
         print(f"Report generation failed for {intake_id}: {e}")
         await db.update_intake_status(intake_id, "failed")
@@ -380,10 +481,28 @@ async def download_report(intake_id: str):
     if not intake:
         raise HTTPException(404, "Intake not found")
     subject = intake["first_name"]
+    filename = f"SAAQReport-{subject}.docx"
+
+    # try Supabase Storage first
+    sb = get_supabase()
+    if sb:
+        report = await db.get_report_by_intake(intake_id)
+        storage_path = report.get("docx_path") if report else None
+        if storage_path:
+            docx_bytes = _download_docx_from_storage(sb, storage_path)
+            if docx_bytes:
+                return Response(
+                    content=docx_bytes,
+                    media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                    headers={"Content-Disposition": f'attachment; filename="{filename}"'}
+                )
+
+    # fallback: check local filesystem
     for f in OUTPUT_DIR.iterdir():
         if f.name.startswith(f"SAAQReport-{subject}-{intake_id[:8]}") and f.suffix == ".docx":
-            return FileResponse(str(f), media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document", filename=f"SAAQReport-{subject}.docx")
-    raise HTTPException(404, "Report file not found")
+            return FileResponse(str(f), media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document", filename=filename)
+
+    raise HTTPException(404, "Report file not found. Try regenerating the report.")
 
 
 @app.get("/api/v1/reports")
@@ -502,42 +621,7 @@ async def admin_dashboard_stats(user=Depends(require_admin)):
         "total_users": num_users,
     }
 
-@app.post("/api/v1/admin/grant-free")
-async def grant_free_report(request: Request, user=Depends(require_admin)):
-    body = await request.json()
-    email = body.get("email", "").strip().lower()
-    product_type = body.get("product_type", "30q_report")
-    if not email:
-        raise HTTPException(400, "Email required")
-    sb = get_supabase()
-    if not sb:
-        raise HTTPException(503, "Database not configured")
-    sb.table("grants").insert({"email": email, "product_type": product_type, "granted_by": user["id"]}).execute()
-    return {"message": f"Free report granted to {email}"}
 
-
-@app.get("/api/v1/check-grant")
-async def check_grant(user=Depends(require_auth)):
-    sb = get_supabase()
-    if not sb:
-        return {"has_grant": False}
-    result = sb.table("grants").select("*").eq("email", user["email"].lower()).eq("used", False).execute()
-    if result.data:
-        return {"has_grant": True, "grant_id": result.data[0]["id"], "product_type": result.data[0]["product_type"]}
-    return {"has_grant": False}
-
-
-@app.post("/api/v1/redeem-grant")
-async def redeem_grant(request: Request, user=Depends(require_auth)):
-    body = await request.json()
-    grant_id = body.get("grant_id")
-    sb = get_supabase()
-    if not sb:
-        raise HTTPException(503, "Database not configured")
-    sb.table("grants").update({"used": True}).eq("id", grant_id).eq("email", user["email"].lower()).execute()
-    return {"message": "Grant redeemed"}
-
-# ─── Legacy dashboard (no auth) ──────────────────────────────
 @app.get("/api/v1/dashboard", response_model=DashboardStats)
 async def dashboard_stats():
     intakes = await db.list_intakes()
